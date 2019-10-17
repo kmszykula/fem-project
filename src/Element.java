@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class Element {
-    public int []ids=new int[4];
+    private int[] ids =new int[4];
 
     public Element(int[] ids) {
         this.ids = ids;

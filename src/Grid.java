@@ -1,4 +1,10 @@
 public class Grid {
-//public Node []nodes = new Node[numberOfNodes]; ????
-    //   public Element []elements = new Element [numberOfElements]; ???
+    GlobalData globalData = new GlobalData();
+    public Node[] nodes;
+    public Element[] elements;
+
+    public Grid() {
+        this.nodes = new Node[globalData.getNumberOfNodes()];
+        this.elements = new Element[globalData.getNumberOfElements()];
+    }
 }

@@ -4,7 +4,7 @@ public class Node {
     private int x;
     private int y;
     private double temperature;
-    private boolean boundaryConditions;
+    private boolean boundaryCondition;
 
     public int getX() {
         return x;
@@ -30,19 +30,19 @@ public class Node {
         this.temperature = temperature;
     }
 
-    public boolean isBoundaryConditions() {
-        return boundaryConditions;
+    public boolean isBoundaryCondition() {
+        return boundaryCondition;
     }
 
-    public void setBoundaryConditions(boolean boundaryConditions) {
-        this.boundaryConditions = boundaryConditions;
+    public void setBoundaryCondition(boolean boundaryCondition) {
+        this.boundaryCondition = boundaryCondition;
     }
 
-    public Node(int x, int y, double temperature, boolean boundaryConditions) {
+    public Node(int x, int y, double temperature, boolean boundaryCondition) {
         this.x = x;
         this.y = y;
         this.temperature = temperature;
-        this.boundaryConditions = boundaryConditions;
+        this.boundaryCondition = boundaryCondition;
     }
 
     @Override
@@ -53,12 +53,12 @@ public class Node {
         return x == node.x &&
                 y == node.y &&
                 Double.compare(node.temperature, temperature) == 0 &&
-                boundaryConditions == node.boundaryConditions;
+                boundaryCondition == node.boundaryCondition;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, temperature, boundaryConditions);
+        return Objects.hash(x, y, temperature, boundaryCondition);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Node {
                 "x=" + x +
                 ", y=" + y +
                 ", temperature=" + temperature +
-                ", boundaryConditions=" + boundaryConditions +
+                ", boundaryCondition=" + boundaryCondition +
                 '}';
     }
 }

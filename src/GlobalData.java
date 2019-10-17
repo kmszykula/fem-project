@@ -1,22 +1,26 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class GlobalData {
-    //TODO wczytać z pliku? w konstruktorze?
+
     private int height;
     private int width;
     private int numberHeight; //6
     private int numberWidth; //4
-    private int numberOfElements;//15: (numberHeight-1)(numberWidth-1), liczba elementów
-    private int numberOfNodes; //24 - liczba węzłów numberHeight*numberWidth
+    private int numberOfElements =(numberHeight-1)*(numberWidth-1);
+    private int numberOfNodes= numberHeight*numberWidth;
 
-    public GlobalData(int height, int width, int numberHeight, int numberWidth, int numberOfElements, int numberOfNodes) {
-        this.height = height;
-        this.width = width;
-        this.numberHeight = numberHeight;
-        this.numberWidth = numberWidth;
-        this.numberOfElements = numberOfElements;
-        this.numberOfNodes = numberOfNodes;
-    }
+//    public GlobalData(int height, int width, int numberHeight, int numberWidth) throws FileNotFoundException {
+//
+//        this.height = height;
+//        this.width = width;
+//        this.numberHeight = numberHeight;
+//        this.numberWidth = numberWidth;
+//        this.numberOfElements = (numberHeight-1)*(numberWidth-1);
+//        this.numberOfNodes = numberHeight*numberWidth;
+//    }
 
     public int getHeight() {
         return height;
