@@ -1,24 +1,35 @@
 import java.util.Objects;
 
 public class Node {
-    private int x;
-    private int y;
-    private double temperature;
-    private boolean boundaryCondition;
 
-    public int getX() {
+
+    private int nodeIndex;  //  output
+    private double x; //OUTPUT
+    private double y;
+    private double temperature;
+    private boolean boundaryCondition; //??
+
+    public int getNodeIndex() {
+        return nodeIndex;
+    }
+
+    public void setNodeIndex(int nodeIndex) {
+        this.nodeIndex = nodeIndex;
+    }
+
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -38,28 +49,14 @@ public class Node {
         this.boundaryCondition = boundaryCondition;
     }
 
-    public Node(int x, int y, double temperature, boolean boundaryCondition) {
+    public Node(int nodeIndex, double x, double y, double temperature, boolean boundaryCondition) {
+        this.nodeIndex = nodeIndex;
         this.x = x;
         this.y = y;
         this.temperature = temperature;
         this.boundaryCondition = boundaryCondition;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
-        return x == node.x &&
-                y == node.y &&
-                Double.compare(node.temperature, temperature) == 0 &&
-                boundaryCondition == node.boundaryCondition;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, temperature, boundaryCondition);
-    }
 
     @Override
     public String toString() {

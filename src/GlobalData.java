@@ -4,25 +4,29 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class GlobalData {
+//TODO wczytywanie z pliku
 
-    private int height;
-    private int width;
-    private int numberHeight; //6
-    private int numberWidth; //4
-    private int numberOfElements =(numberHeight-1)*(numberWidth-1);
-    private int numberOfNodes= numberHeight*numberWidth;
+    private double height;
+    private double width;
+    private int nodeHeight; //6
+    private int nodeWidth; //4
+    private int numberOfElements;
+    private int numberOfNodes;
+   // private boolean boundaryCondition;
 
-//    public GlobalData(int height, int width, int numberHeight, int numberWidth) throws FileNotFoundException {
-//
-//        this.height = height;
-//        this.width = width;
-//        this.numberHeight = numberHeight;
-//        this.numberWidth = numberWidth;
-//        this.numberOfElements = (numberHeight-1)*(numberWidth-1);
-//        this.numberOfNodes = numberHeight*numberWidth;
-//    }
 
-    public int getHeight() {
+    public GlobalData() throws FileNotFoundException {
+        File file = new File("C:\\Users\\asus\\fem-grid\\src\\mes.txt");
+        Scanner scanner = new Scanner(file);
+        this.height = Double.parseDouble(scanner.nextLine());
+        this.width = Double.parseDouble(scanner.nextLine());
+        this.nodeHeight =  Integer.parseInt(scanner.nextLine());
+        this.nodeWidth = Integer.parseInt(scanner.nextLine());
+        this.numberOfElements = (nodeHeight - 1) * (nodeWidth - 1);
+        this.numberOfNodes = nodeHeight * nodeWidth;
+    }
+
+    public double getHeight() {
         return height;
     }
 
@@ -30,7 +34,7 @@ public class GlobalData {
         this.height = height;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
@@ -38,20 +42,20 @@ public class GlobalData {
         this.width = width;
     }
 
-    public int getNumberHeight() {
-        return numberHeight;
+    public int getNodeHeight() {
+        return nodeHeight;
     }
 
-    public void setNumberHeight(int numberHeight) {
-        this.numberHeight = numberHeight;
+    public void setNodeHeight(int nodeHeight) {
+        this.nodeHeight = nodeHeight;
     }
 
-    public int getNumberWidth() {
-        return numberWidth;
+    public int getNodeWidth() {
+        return nodeWidth;
     }
 
-    public void setNumberWidth(int numberWidth) {
-        this.numberWidth = numberWidth;
+    public void setNodeWidth(int nodeWidth) {
+        this.nodeWidth = nodeWidth;
     }
 
     public int getNumberOfElements() {
@@ -70,31 +74,15 @@ public class GlobalData {
         this.numberOfNodes = numberOfNodes;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GlobalData that = (GlobalData) o;
-        return height == that.height &&
-                width == that.width &&
-                numberHeight == that.numberHeight &&
-                numberWidth == that.numberWidth &&
-                numberOfElements == that.numberOfElements &&
-                numberOfNodes == that.numberOfNodes;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(height, width, numberHeight, numberWidth, numberOfElements, numberOfNodes);
-    }
 
     @Override
     public String toString() {
         return "GlobalData{" +
                 "height=" + height +
                 ", width=" + width +
-                ", numberHeight=" + numberHeight +
-                ", numberWidth=" + numberWidth +
+                ", numberHeight=" + nodeHeight +
+                ", numberWidth=" + nodeWidth +
                 ", numberOfElements=" + numberOfElements +
                 ", numberOfNodes=" + numberOfNodes +
                 '}';
