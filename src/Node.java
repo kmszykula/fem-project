@@ -3,11 +3,11 @@ import java.util.Objects;
 public class Node {
 
 
-    private int nodeIndex;  //  output
-    private double x; //OUTPUT
+    private int nodeIndex;
+    private double x;
     private double y;
     private double temperature;
-    private boolean boundaryCondition; //??
+    private boolean boundaryCondition;
 
     public int getNodeIndex() {
         return nodeIndex;
@@ -60,11 +60,10 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{" +
+        return "Node " + nodeIndex + ": " +
                 "x=" + x +
                 ", y=" + y +
                 ", temperature=" + temperature +
-                ", boundaryCondition=" + boundaryCondition +
-                '}';
+                ", boundaryCondition=" + boundaryCondition;
     }
 }

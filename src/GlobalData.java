@@ -4,15 +4,15 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class GlobalData {
-//TODO wczytywanie z pliku
+
 
     private double height;
     private double width;
-    private int nodeHeight; //6
-    private int nodeWidth; //4
+    private int nodeHeight;
+    private int nodeWidth;
     private int numberOfElements;
     private int numberOfNodes;
-   // private boolean boundaryCondition;
+
 
 
     public GlobalData() throws FileNotFoundException {

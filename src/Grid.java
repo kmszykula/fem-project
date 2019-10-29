@@ -38,46 +38,42 @@ public class Grid {
     }
 
     public Element[] elementBuilder() {
-        int elementIndex = 0;
-
-        for (int i = 0; i < globalData.getNodeWidth() - 1; i++) {
-            for (int j = 0; j < globalData.getNodeHeight() - 1; j++) {
-                //TODO dodać flagę
-                int[] ids = new int[4];
-                ids[0] = elementIndex + 1; //bottom left
-                ids[1] = ids[0] + globalData.getNodeHeight();//bottom right
-                ids[2] = ids[1] + 1;//top right
-                ids[3] = ids[0] + 1; //top left
-
-                Element element = new Element(elementIndex + 1, ids);
-                elements[elementIndex] = element;
-                elementIndex++;
-//                if (elementIndex % globalData.getNodeHeight() == 0) {
-//                    elementIndex++;
-//                }
-
+        int index = 1;
+        int elementIndex = 1;
+        for (int i = 0; i < globalData.getNumberOfElements(); i++) {
+            elements[i] = new Element(elementIndex);
+            elementIndex++;
+            //System.out.println(elements[i].getElementIndex());
+            elements[i].setNodesIDs(index, globalData.getNodeHeight());
+            index++;
+            if (index % globalData.getNodeHeight() == 0) {
+                index++;
             }
-
-
         }
         return elements;
+
+    }
+
+    public void findElementCoordinates(int elementIndex) {
+        for (Element e : elements) {
+            if (e.getElementIndex() == elementIndex) {
+                System.out.println(e);
+                for (Node n : nodes) {
+                    for (int i = 0; i < e.getNodesIDs().length; i++) {
+                        if (e.getNodesIDs()[i] == n.getNodeIndex()) {
+                            System.out.println(n.getNodeIndex() + " x:" + n.getX() + ", y:" + n.getY());
+                        }
+                    }
+                }
+
+            }//TODO handle wrong ID error
+        }
     }
 
 
     public void gridBuilder() {
         nodeBuilder();
         elementBuilder();
-    }
-
-    public Element findElement(int elementIndex) {
-        //TODO find id coords
-        for (Element e : elements) {
-            if (e.getElementIndex() == elementIndex) {
-                return e;
-            }
-        }
-        System.err.println("Element with this index does not exist");
-        return null;
     }
 
 

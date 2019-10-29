@@ -1,13 +1,18 @@
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
-
 import java.util.Arrays;
 
 public class Element {
 
 
     private int elementIndex;
-    private int[] ids = new int[4];
+    private int[] nodesIDs = new int[4];
+
+    public void setNodesIDs(int index, double nH) {
+        nodesIDs[0] = index;
+        nodesIDs[1] = nodesIDs[0] + (int) nH;
+        nodesIDs[2] = nodesIDs[1] + 1;
+        nodesIDs[3] = nodesIDs[0] + 1;
+
+    }
 
     public int getElementIndex() {
         return elementIndex;
@@ -18,24 +23,22 @@ public class Element {
     }
 
 
-    public Element(int elementIndex, int[] ids) {
+    public Element(int elementIndex) {
         this.elementIndex = elementIndex;
-        this.ids = ids;
+
     }
 
-    public int[] getIds() {
-        return ids;
+    public int[] getNodesIDs() {
+        return nodesIDs;
     }
 
-    public void setIds(int[] ids) {
-        this.ids = ids;
-    }
+
 
 
     @Override
     public String toString() {
         return "Element " +
                 elementIndex +
-                ": nodes = " + Arrays.toString(ids);
+                ": nodes = " + Arrays.toString(nodesIDs);
     }
 }
