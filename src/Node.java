@@ -1,7 +1,6 @@
-import java.util.Objects;
+
 
 public class Node {
-
 
     private int nodeIndex;
     private double x;

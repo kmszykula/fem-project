@@ -57,11 +57,11 @@ public class Grid {
     public void findElementCoordinates(int elementIndex) {
         for (Element e : elements) {
             if (e.getElementIndex() == elementIndex) {
-                System.out.println(e);
+                System.out.println(e); //?
                 for (Node n : nodes) {
                     for (int i = 0; i < e.getNodesIDs().length; i++) {
                         if (e.getNodesIDs()[i] == n.getNodeIndex()) {
-                            System.out.println(n.getNodeIndex() + " x:" + n.getX() + ", y:" + n.getY());
+                            System.out.println(n.getNodeIndex() + " x: " + n.getX() + ", y: " + n.getY() +", boundary condition: "+n.isBoundaryCondition()); //TODO zmienic ale jak
                         }
                     }
                 }
