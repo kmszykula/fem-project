@@ -68,7 +68,7 @@ public class UniversalElement { //element w układzie (xi, eta)
         this.shapeFunctions = new double[]{N1(xi, eta), N2(xi, eta), N3(xi, eta), N4(xi, eta)};
         this.xiDerivatives = new double[]{dN1dXi(xi, eta), dN2dXi(xi, eta), dN3dXi(xi, eta), dN4dXi(xi, eta)};
         this.etaDerivatives = new double[]{dN1dEta(xi, eta), dN2dEta(xi, eta), dN3dEta(xi, eta), dN4dEta(xi, eta)};
-        //not sure about this
+
     }
 
 

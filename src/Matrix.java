@@ -14,11 +14,11 @@ public class Matrix {
 
         for (int i = 0; i < integrationPoints2D.length; i++) {
             outputMatrix[i] = new double[]{
-                    //tu przypisujemy po kolei dn1dxi w 1,2,3,4 pkt calkowania, dn2dxi itd
+
                     integrationPoints2D[i].getShapeFunctions()[0], //n1
                     integrationPoints2D[i].getShapeFunctions()[1], //n2
                     integrationPoints2D[i].getShapeFunctions()[2], //n3
-                    integrationPoints2D[i].getShapeFunctions()[3]//n4
+                    integrationPoints2D[i].getShapeFunctions()[3]  //n4
             };
 
         }
@@ -37,7 +37,7 @@ public class Matrix {
 
         for (int i = 0; i < integrationPoints2D.length; i++) {
             outputMatrix[i] = new double[]{
-                    // tu przypisujemy po kolei dn1dxi w 1,2,3,4 pkt calkowania, dn2dxi itd
+
                     integrationPoints2D[i].getXiDerivatives()[0],
                     integrationPoints2D[i].getXiDerivatives()[1],
                     integrationPoints2D[i].getXiDerivatives()[2],
@@ -60,9 +60,9 @@ public class Matrix {
 
         for (int i = 0; i < integrationPoints2D.length; i++) {
             outputMatrix[i] = new double[]{
-                    // tu przypisujemy po kolei dn1dxi w 1,2,3,4 pkt calkowania, dn2dxi itd
+
                     integrationPoints2D[i].getEtaDerivatives()[0],
-                    integrationPoints2D[i].getEtaDerivatives()[1], //chyba kolejnosc punktow calkowania jest zle ale whatever paniee to sie wyklepie
+                    integrationPoints2D[i].getEtaDerivatives()[1],
                     integrationPoints2D[i].getEtaDerivatives()[2],
                     integrationPoints2D[i].getEtaDerivatives()[3]
             };
