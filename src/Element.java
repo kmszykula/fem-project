@@ -1,16 +1,25 @@
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Arrays;
 
 public class Element {
 
 
     private int elementIndex;
-    private int[] nodesIDs = new int[4];
+    @Getter
+    @Setter
+    private Node[] elementNodes = new Node[4];
 
-    public void setNodesIDs(int index, double nH) {
-        nodesIDs[0] = index;
-        nodesIDs[1] = nodesIDs[0] + (int) nH;
-        nodesIDs[2] = nodesIDs[1] + 1;
-        nodesIDs[3] = nodesIDs[0] + 1;
+    public void setNodes(Node node1, Node node2, Node node3, Node node4){
+        elementNodes[0]=node1;
+        elementNodes[1]=node2;
+        elementNodes[2]=node3;
+        elementNodes[3]=node4;
+    }
+
+    public Element(int elementIndex) {
+        this.elementIndex = elementIndex;
 
     }
 
@@ -23,22 +32,10 @@ public class Element {
     }
 
 
-    public Element(int elementIndex) {
-        this.elementIndex = elementIndex;
-
-    }
-
-    public int[] getNodesIDs() {
-        return nodesIDs;
-    }
-
-
-
 
     @Override
     public String toString() {
         return "Element " +
-                elementIndex +
-                ": nodes = " + Arrays.toString(nodesIDs);
+                elementIndex;
     }
 }
