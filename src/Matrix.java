@@ -203,7 +203,7 @@ public class Matrix {
         double localHMatrix[][]=new double[result.length][result.length];
         for (int i = 0; i <localHMatrix.length ; i++) {
             for (int j = 0; j <localHMatrix[i].length ; j++) {
-                localHMatrix[i][j]=result[0][i][j]+result[1][i][j]+result[2][i][j]+result[3][i][j];//trzeba to zmienic bo za glowe sie idzie zlapac XDDD
+                localHMatrix[i][j]=(result[0][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1])+(result[1][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1])+(result[2][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1])+(result[3][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1]);//trzeba to zmienic bo za glowe sie idzie zlapac XDDD
             }
         }
         return localHMatrix;
