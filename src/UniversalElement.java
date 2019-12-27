@@ -60,6 +60,9 @@ public class UniversalElement { //element w układzie (xi, eta)
     }
 
 
+
+
+
     public UniversalElement(double xi, double eta, int[] integrationPointsWeights) {
 
 //        this.xi = integrationPoints[0];

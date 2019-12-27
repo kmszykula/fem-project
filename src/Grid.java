@@ -17,20 +17,23 @@ public class Grid {
 
     public Grid() throws FileNotFoundException {
         this.globalData = new GlobalData();
-        this.nodes = new Node[globalData.getNumberOfNodes()];
+        this.nodes = new Node[globalData.getNumberOfNodes() + 1];
         this.elements = new Element[globalData.getNumberOfElements()];
     }
 
     public Node[] nodeBuilder() {
-        double deltaX = (double) globalData.getWidth() / (double) (globalData.getNodeWidth() - 1); //lengths of elements
-        double deltaY = (double) globalData.getHeight() / (double) (globalData.getNodeHeight() - 1);
-        int nodeIndex = 0;
+//        double deltaX = (double) globalData.getWidth() / (double) (globalData.getNodeWidth() - 1); //lengths of elements
+//        double deltaY = (double) globalData.getHeight() / (double) (globalData.getNodeHeight() - 1);
+        double deltaX=0.025;
+       double deltaY=0.025;
+
+        int nodeIndex = 1;
         for (int i = 0; i < globalData.getNodeWidth(); i++) {
             for (int j = 0; j < globalData.getNodeHeight(); j++) {
                 double x = i * deltaX;
                 double y = j * deltaY;
                 boolean BC = isBoundaryCondition(x, y);
-                nodes[nodeIndex] = new Node(nodeIndex + 1, x, y, 0, BC);
+                nodes[nodeIndex] = new Node(nodeIndex, x, y, 0, BC);
                 nodeIndex++;
             }
         }
@@ -40,15 +43,16 @@ public class Grid {
 
     public Element[] elementBuilder() {
 
-        int index = 0;
+        int index = 1;
         for (int i = 0; i < globalData.getNumberOfElements(); i++) {
-            elements[i]=new Element(i+1);
+
+            elements[i] = new Element(i + 1);
 
             elements[i].setNodes(
                     nodes[index],
-                    nodes[index+globalData.getNodeHeight()],
-                    nodes[index+globalData.getNodeHeight()+1],
-                    nodes[index+1]
+                    nodes[index + globalData.getNodeHeight()],
+                    nodes[index + globalData.getNodeHeight() + 1],
+                    nodes[index + 1]
             );
             index++;
             if (index % globalData.getNodeHeight() == 0) {
