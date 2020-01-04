@@ -3,10 +3,8 @@ import lombok.Getter;
 @Getter
 public class UniversalElement { //element w układzie (xi, eta)
 
-    private double[] integrationPoints = new double[]{-(1 / Math.sqrt(3)), 1 / Math.sqrt(3)};
-    private int[] integrationPointsWeights = new int[]{1, 1};
-    private double xi;
-    private double eta;
+   // private double[] integrationPoints = new double[]{-(1 / Math.sqrt(3)), 1 / Math.sqrt(3)}; //xi,eta
+    private int[] integrationPointsWeights;
     private double[] shapeFunctions;
     private double[] xiDerivatives;
     private double[] etaDerivatives;
@@ -65,8 +63,6 @@ public class UniversalElement { //element w układzie (xi, eta)
 
     public UniversalElement(double xi, double eta, int[] integrationPointsWeights) {
 
-//        this.xi = integrationPoints[0];
-//        this.eta = integrationPoints[1];
         this.integrationPointsWeights = integrationPointsWeights;
         this.shapeFunctions = new double[]{N1(xi, eta), N2(xi, eta), N3(xi, eta), N4(xi, eta)};
         this.xiDerivatives = new double[]{dN1dXi(xi, eta), dN2dXi(xi, eta), dN3dXi(xi, eta), dN4dXi(xi, eta)};

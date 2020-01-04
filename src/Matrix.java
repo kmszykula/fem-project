@@ -1,30 +1,35 @@
+import java.util.Arrays;
+
 public class Matrix {
 
     private double xi = 1 / Math.sqrt(3);
     private double eta = 1 / Math.sqrt(3);
-    private double k = 30;//conductivity//tu ma być czy nie tu ma być? hmmm
+
     private int[] integrationPointsWeights = new int[]{1, 1};
+
     private UniversalElement integrationPoint1 = new UniversalElement(-xi, -eta, integrationPointsWeights);
     private UniversalElement integrationPoint2 = new UniversalElement(xi, -eta, integrationPointsWeights);
     private UniversalElement integrationPoint3 = new UniversalElement(xi, eta, integrationPointsWeights);
     private UniversalElement integrationPoint4 = new UniversalElement(-xi, eta, integrationPointsWeights);
     private UniversalElement[] integrationPoints2D = new UniversalElement[]{integrationPoint1, integrationPoint2, integrationPoint3, integrationPoint4};
+    //todo fix them sizes
     private double[] dxdxi = new double[integrationPoints2D.length];
     private double[] dxdeta = new double[integrationPoints2D.length];
     private double[] dydxi = new double[integrationPoints2D.length];
     private double[] dydeta = new double[integrationPoints2D.length];
     private double[] jacobianDeterminant = new double[integrationPoints2D.length];
+    private double[][] shapeFunctionsMatrix = new double[integrationPoints2D.length][integrationPoints2D.length];
     private double[][] dndx = new double[integrationPoints2D.length][integrationPoints2D.length];
     private double[][] dndy = new double[integrationPoints2D.length][integrationPoints2D.length];
-    private double[][][] dndxMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
-    private double[][][] dndyMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
 
+    //private double [][][]multiplicationResult=new double[4][4][4];
+    private double[][] localCMatrix = new double[4][4]; //todo ujednolicic z h
 
     public double[][] shapeFunctionsMatrix() {
-        double[][] result = new double[4][4];
+        //double[][] shapeFunctionsMatrix = new double[4][4];
 
         for (int i = 0; i < integrationPoints2D.length; i++) {
-            result[i] = new double[]{
+            shapeFunctionsMatrix[i] = new double[]{
 
                     integrationPoints2D[i].getShapeFunctions()[0], //n1
                     integrationPoints2D[i].getShapeFunctions()[1], //n2
@@ -33,13 +38,7 @@ public class Matrix {
             };
 
         }
-//        for (int i = 0; i < 4; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                System.out.println("N" + (i + 1) + " value in " + (j + 1) + " integration point: " + result[i][j]);
-//            }
-//        }
-
-        return result;
+        return shapeFunctionsMatrix;
 
     }
 
@@ -56,11 +55,6 @@ public class Matrix {
             };
 
         }
-//        for (int i = 0; i < 4; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                System.out.println("dN" + (i + 1) + "dXi value in " + (j + 1) + " integration point: " + result[i][j]);
-//            }
-//        }
 
         return result;
 
@@ -79,11 +73,6 @@ public class Matrix {
             };
 
         }
-//        for (int i = 0; i < 4; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                System.out.println("dN" + (i + 1) + "dEta value in " + (j + 1) + " integration point: " + result[i][j]);
-//            }
-//        }
 
         return result;
 
@@ -111,15 +100,15 @@ public class Matrix {
         for (int i = 0; i < jacobianDeterminant.length; i++) {
             jacobianDeterminant[i] = (dxdxi[i] * dydeta[i]) - (dxdeta[i] * dydxi[i]); //liczymy jakobiany w 4. punktach całkowania (tu są akurat takie same bo mamy elementy prostokątne w siatce)
         }
-        for (int i = 0; i < 4; i++) { //to tak na sztywno bo test
-            System.out.println("jakobian " + (i + 1) + " pc: " + jacobianDeterminant[i]);
-        }
+//        for (int i = 0; i < 4; i++) { //to tak na sztywno bo test
+//            System.out.println("jakobian " + (i + 1) + " pc: " + jacobianDeterminant[i]);
+//        }
 
         return jacobianDeterminant;
     }
 
     public double[][] dNdX(Element element) { //zwraca dn1dx dn2dx itd we wszystkich pc
-        //  double [][]dndx = new double [integrationPoints2D.length][integrationPoints2D.length];//todo zmienic bo to nie jest liczba pc!!!
+
         for (int i = 0; i < dndx.length; i++) {
             for (int j = 0; j < dndx[i].length; j++) {
                 dndx[i][j] = (1 / jacobianDeterminant[j]) * ((dydeta[j] * xiDerivativesMatrix()[i][j]) - (dydxi[j] * etaDerivativesMatrix()[i][j]));
@@ -132,7 +121,6 @@ public class Matrix {
     }
 
     public double[][] dNdy(Element element) {
-        // double [][]dndy=new double [integrationPoints2D.length][integrationPoints2D.length];
         for (int i = 0; i < dndy.length; i++) {
             for (int j = 0; j < dndy[i].length; j++) {
                 dndy[i][j] = (1 / jacobianDeterminant[j]) * ((dxdxi[j] * etaDerivativesMatrix()[i][j]) - dxdeta[j] * xiDerivativesMatrix()[i][j]);
@@ -150,62 +138,192 @@ public class Matrix {
         }
         return tmp;
     }
+//
+//    public double[][][] multiplydNdxByTransposed(Element element) {//4 macierze 4x4
+//
+//
+//        return dndxMultipliedByTransposed ;
+//    }
+//
+//    public double[][][] multiplydNdyByTransposed(Element element) {//4 macierze 4x4
+//
+//        return dndyMultipliedByTransposed;
+//    }
 
-    public double[][][] multiplydNdxByTransposed(Element element) {//4 macierze 4x4
-        double[][] transposedMatrix = transposeMatrix(dndx);
-        //double[][][] dndxMultipliedByTransposed  = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
-        for (int i = 0; i < dndxMultipliedByTransposed .length; i++) {
-            for (int j = 0; j < dndxMultipliedByTransposed [i].length; j++) {
-                for (int k = 0; k < dndxMultipliedByTransposed [i][j].length; k++) {
-                    dndxMultipliedByTransposed [0][j][k] = dndx[0][k] * transposedMatrix[j][0] * jacobianDeterminant[k];
-                    dndxMultipliedByTransposed [1][j][k] = dndx[1][k] * transposedMatrix[j][1] * jacobianDeterminant[k];
-                    dndxMultipliedByTransposed [2][j][k] = dndx[2][k] * transposedMatrix[j][2] * jacobianDeterminant[k];
-                    dndxMultipliedByTransposed [3][j][k] = dndx[3][k] * transposedMatrix[j][3] * jacobianDeterminant[k];
+    public double[][] calculateLocalHMatrix(Element element) { //lokalna macierz H (suma we wszystkich 4 pc)
+        //conductivity//tu ma być czy nie tu ma być? hmmm
+        double[][][] dndxMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
+        double[][][] dndyMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
+        int conductivity = 30;
+        double[][][] result = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
+        double[][] transposedMatrix = transposeMatrix(dndy);
+        double[][] transposedMatrix1 = transposeMatrix(dndx);
+        for (int i = 0; i < dndxMultipliedByTransposed.length; i++) {
+            for (int j = 0; j < dndxMultipliedByTransposed[i].length; j++) {
+                for (int k = 0; k < dndxMultipliedByTransposed[i][j].length; k++) {
+                    dndxMultipliedByTransposed[0][j][k] = dndx[0][k] * transposedMatrix1[j][0];
+                    dndxMultipliedByTransposed[1][j][k] = dndx[1][k] * transposedMatrix1[j][1];
+                    dndxMultipliedByTransposed[2][j][k] = dndx[2][k] * transposedMatrix1[j][2];
+                    dndxMultipliedByTransposed[3][j][k] = dndx[3][k] * transposedMatrix1[j][3];
 
                 }
             }
         }
-
-        return dndxMultipliedByTransposed ;
-    }
-
-    public double[][][] multiplydNdyByTransposed(Element element) {//4 macierze 4x4
-        double[][] transposedMatrix = transposeMatrix(dndy);
-        //double[][][] dndyMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
         for (int i = 0; i < dndyMultipliedByTransposed.length; i++) {
             for (int j = 0; j < dndyMultipliedByTransposed[i].length; j++) {
                 for (int k = 0; k < dndyMultipliedByTransposed[i][j].length; k++) {
-                    dndyMultipliedByTransposed[0][j][k] = dndy[0][k] * transposedMatrix[j][0] * jacobianDeterminant[k];
-                    dndyMultipliedByTransposed[1][j][k] = dndy[1][k] * transposedMatrix[j][1] * jacobianDeterminant[k];
-                    dndyMultipliedByTransposed[2][j][k] = dndy[2][k] * transposedMatrix[j][2] * jacobianDeterminant[k];
-                    dndyMultipliedByTransposed[3][j][k] = dndy[3][k] * transposedMatrix[j][3] * jacobianDeterminant[k];
+                    dndyMultipliedByTransposed[0][j][k] = dndy[0][k] * transposedMatrix[j][0];
+                    dndyMultipliedByTransposed[1][j][k] = dndy[1][k] * transposedMatrix[j][1];
+                    dndyMultipliedByTransposed[2][j][k] = dndy[2][k] * transposedMatrix[j][2];
+                    dndyMultipliedByTransposed[3][j][k] = dndy[3][k] * transposedMatrix[j][3];
 
                 }
             }
         }
 
-        return dndyMultipliedByTransposed;
-    }
-
-    public double[][] calculateHMatrix(Element element) {
-//todo dodac to co wczesniej policzone do sb i pomnozyc przez k,znowu maja byc 4 macierze 4x4
-        double[][][] result = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result[i].length; j++) {
                 for (int l = 0; l < result[i][j].length; l++) {
-                    result[0][j][l] = (dndxMultipliedByTransposed[0][j][l]+dndyMultipliedByTransposed[0][j][l])*k; //todo tu mnozyc x jak zeby to mialo rece i nogi
-                    result[1][j][l] = (dndxMultipliedByTransposed[1][j][l]+dndyMultipliedByTransposed[1][j][l])*k;
-                    result[2][j][l] = (dndxMultipliedByTransposed[2][j][l]+dndyMultipliedByTransposed[2][j][l])*k;
-                    result[3][j][l] = (dndxMultipliedByTransposed[3][j][l]+dndyMultipliedByTransposed[3][j][l])*k;
+
+                    result[0][j][l] = (dndxMultipliedByTransposed[0][j][l] + dndyMultipliedByTransposed[0][j][l]) * conductivity * jacobianDeterminant[l]; //todo tu mnozyc x jak zeby to mialo rece i nogi
+                    result[1][j][l] = (dndxMultipliedByTransposed[1][j][l] + dndyMultipliedByTransposed[1][j][l]) * conductivity * jacobianDeterminant[l];
+                    result[2][j][l] = (dndxMultipliedByTransposed[2][j][l] + dndyMultipliedByTransposed[2][j][l]) * conductivity * jacobianDeterminant[l];
+                    result[3][j][l] = (dndxMultipliedByTransposed[3][j][l] + dndyMultipliedByTransposed[3][j][l]) * conductivity * jacobianDeterminant[l];
                 }
             }
         }
-        double localHMatrix[][]=new double[result.length][result.length];
-        for (int i = 0; i <localHMatrix.length ; i++) {
-            for (int j = 0; j <localHMatrix[i].length ; j++) {
-                localHMatrix[i][j]=(result[0][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1])+(result[1][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1])+(result[2][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1])+(result[3][i][j]*integrationPointsWeights[0]*integrationPointsWeights[1]);//trzeba to zmienic bo za glowe sie idzie zlapac XDDD
+        double localHMatrix[][] = new double[result.length][result.length]; //co
+        for (int i = 0; i < localHMatrix.length; i++) {
+            for (int j = 0; j < localHMatrix[i].length; j++) {
+                localHMatrix[i][j] = (result[0][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (result[1][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (result[2][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (result[3][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]);
             }
         }
         return localHMatrix;
     }
+
+    public double[][] calculateLocalCMatrix(Element element) {
+        //? nwm jakoś sensownie te rozmiary trzeba nadawać
+        int ro = 7800;
+        int c = 700;
+        double[][] shapeFunctionsTransposed = transposeMatrix(shapeFunctionsMatrix);
+        double[][][] multiplicationResult = new double[integrationPoints2D.length][shapeFunctionsMatrix.length][shapeFunctionsMatrix[0].length];
+        //[c] = c*ro*{N}{N}^T
+        for (int i = 0; i < multiplicationResult.length; i++) {
+            for (int j = 0; j < multiplicationResult[i].length; j++) {
+                for (int l = 0; l < multiplicationResult[i][j].length; l++) {
+
+                    multiplicationResult[0][j][l] = shapeFunctionsMatrix[0][l] * shapeFunctionsTransposed[j][0] * c * ro * jacobianDeterminant[l];
+                    multiplicationResult[1][j][l] = shapeFunctionsMatrix[1][l] * shapeFunctionsTransposed[j][1] * c * ro * jacobianDeterminant[l];
+                    multiplicationResult[2][j][l] = shapeFunctionsMatrix[2][l] * shapeFunctionsTransposed[j][2] * c * ro * jacobianDeterminant[l];
+                    multiplicationResult[3][j][l] = shapeFunctionsMatrix[3][l] * shapeFunctionsTransposed[j][3] * c * ro * jacobianDeterminant[l];
+                }
+            }
+        }
+        // double [][]localCMatrix=new double [shapeFunctionsMatrix.length][shapeFunctionsMatrix.length];
+        for (int i = 0; i < localCMatrix.length; i++) {
+            for (int j = 0; j < localCMatrix[i].length; j++) {
+                localCMatrix[i][j] = (multiplicationResult[0][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (multiplicationResult[1][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (multiplicationResult[2][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (multiplicationResult[3][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]);
+            }
+        }
+
+        return localCMatrix;
+
+    }
+
+    public double[][][] matrixHWithBC(Element element) {//???
+        double[] surfaceIntegrationPoints = new double[]{-1 / Math.sqrt(3), -1}; //nowe pc po powierzchni
+        double[][][]surfaces=new double[4][4][2];//fix? 3 zamiast 2 bo ma byc jeszcze ich suma???? //??
+        int alfa = 25; //współczynnik konwekcyjnej wymiany ciepła
+        double[][][] surface1 = new double[2][4][4];
+        double[][] []surface2 = new double[2][4][4];
+        double[][] []surface3 = new double[2][4][4];
+        double[][] []surface4 = new double[2][4][4];
+        UniversalElement surface1IP1 = new UniversalElement(surfaceIntegrationPoints[0], surfaceIntegrationPoints[1], integrationPointsWeights);
+        UniversalElement surface1IP2 = new UniversalElement(-surfaceIntegrationPoints[0], surfaceIntegrationPoints[1], integrationPointsWeights);
+        UniversalElement surface2IP1 = new UniversalElement(-surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
+        UniversalElement surface2IP2 = new UniversalElement(-surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
+        UniversalElement surface3IP1 = new UniversalElement(-surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
+        UniversalElement surface3IP2 = new UniversalElement(surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
+        UniversalElement surface4IP1 = new UniversalElement(surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
+        UniversalElement surface4IP2 = new UniversalElement(surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
+//4 macierze h (dla kazdego boku) 4x4 (4f ksztaltu ) dla 2 punktow calkowania
+
+        for (int i = 0; i < surface1.length; i++) {
+            for (int j = 0; j < surface1[i].length; j++) {
+                for (int k = 0; k < surface1[i][j].length; k++) {
+                    surface1[0][j][k] = surface1IP1.getShapeFunctions()[j] * surface1IP1.getShapeFunctions()[k] * alfa; //??
+                    surface1[1][j][k] = surface1IP2.getShapeFunctions()[j] * surface1IP2.getShapeFunctions()[k] * alfa;
+                    //TODO suma ALE NWM GDZIE w sumie mozna tu ale hmmm
+                }
+            }
+        }
+        for (int i = 0; i < surface2.length; i++) {
+            for (int j = 0; j < surface2[i].length; j++) {
+                for (int k = 0; k < surface2[i][j].length; k++) {
+                    surface2[0][j][k] = surface2IP1.getShapeFunctions()[j] * surface2IP1.getShapeFunctions()[k] * alfa; //??
+                    surface2[1][j][k] = surface2IP2.getShapeFunctions()[j] * surface2IP2.getShapeFunctions()[k] * alfa;
+                    //TODO suma ALE NWM GDZIE w sumie mozna tu ale hmmm
+                }
+            }
+        }
+        for (int i = 0; i < surface3.length; i++) {
+            for (int j = 0; j < surface3[i].length; j++) {
+                for (int k = 0; k < surface3[i][j].length; k++) {
+                    surface3[0][j][k] = surface3IP1.getShapeFunctions()[j] * surface3IP1.getShapeFunctions()[k] * alfa; //??
+                    surface3[1][j][k] = surface3IP2.getShapeFunctions()[j] * surface3IP2.getShapeFunctions()[k] * alfa;
+                    //TODO suma ALE NWM GDZIE w sumie mozna tu ale hmmm
+                }
+            }
+        }
+        for (int i = 0; i < surface4.length; i++) {
+            for (int j = 0; j < surface4[i].length; j++) {
+                for (int k = 0; k < surface4[i][j].length; k++) {
+                    surface4[0][j][k] = surface4IP1.getShapeFunctions()[j] * surface4IP1.getShapeFunctions()[k] * alfa; //??
+                    surface4[1][j][k] = surface4IP2.getShapeFunctions()[j] * surface4IP2.getShapeFunctions()[k] * alfa;
+                    //TODO suma ALE NWM GDZIE w sumie mozna tu ale hmmm
+                }
+            }
+        }
+
+        for (int i = 0; i < surface4.length; i++) {
+            System.out.println("hbc in" + (i + 1) + "int pojjngrunjndv");
+            for (int j = 0; j < surface4[i].length; j++) {
+                System.out.println(Arrays.toString(surface4[i][j]));
+            }
+
+
+        }
+        return surfaces;
+    }
+
+
+//musi byc jakies wyjsciowe xi i eta np -1/sqrt3 i -1
+    //4 pow po 2 pkt calkownia kazda
+    //zliczyc ile razy flaga bc = 1, jesli 2 to wprowadzamy warunki brzefowe
+    //a jak nie to co ??????? wypelniac zerami????
+    //4 macierze h (dla kazdego boku) 4x4 (4f ksztaltu ) dla 2 punktow calkowania
+    //(kazda macierz ma 2 punkty calkowania (2 pary wsp - 1 pow)
+    //musimy wiedziec dla jakiego boku liczymy?
+    //dla kazdej powierzchni policzyc wartosci f. ksztaltu w danym pc
+//        Node[]elementNodes=element.getElementNodes();
+//        int BCCount=0;
+//        for (Node n:elementNodes) {
+//            if (n.isBoundaryCondition()){
+//                BCCount++;
+//            }
+//        }
+//        if(BCCount==2){
+//            //now what
+//
+//        }
+    //najpierw stworzyc hbc potem sprawdzac gdzie on jest
+
+
+    // }
 }
