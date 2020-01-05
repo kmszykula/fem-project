@@ -13,7 +13,7 @@ public class Main {
         Matrix matrix = new Matrix();
 
         matrix.xiDerivativesMatrix();//nie wywolywac tych f w mainie tylko w tych co licza macierze
-      matrix.shapeFunctionsMatrix();
+        matrix.shapeFunctionsMatrix();
         for (int i = 0; i < matrix.xiDerivativesMatrix().length; i++) {
             for (int j = 0; j < matrix.xiDerivativesMatrix()[i].length; j++) {
                 System.out.println("dN" + (j + 1) + "dXi value in " + (i + 1) + " integration point: " + matrix.xiDerivativesMatrix()[i][j]);
@@ -56,11 +56,11 @@ public class Main {
 //            }
 //        }
         System.out.println("h matrix"); //trzeba chyba wrzucic wszystko do jednej funkcji bo bez dwoch poprzednich nie dziala XDXDX
-            for (int j = 0; j <matrix.calculateLocalHMatrix(elements[0]).length ; j++) {
-                System.out.println(Arrays.toString(matrix.calculateLocalHMatrix(elements[0])[j]));
-            }
+        for (int j = 0; j < matrix.calculateLocalHMatrix(elements[0]).length; j++) {
+            System.out.println(Arrays.toString(matrix.calculateLocalHMatrix(elements[0])[j]));
+        }
         System.out.println("c matrix:");
-        for (int i = 0; i <matrix.calculateLocalCMatrix(elements[0]).length ; i++) {
+        for (int i = 0; i < matrix.calculateLocalCMatrix(elements[0]).length; i++) {
             System.out.println(Arrays.toString(matrix.calculateLocalCMatrix(elements[0])[i]));
         }
 
@@ -78,6 +78,7 @@ public class Main {
 //        }
 
 matrix.matrixHWithBC(elements[0]);
+       // matrix.jacobianDeterminant(elements[0]);
 
 
     }

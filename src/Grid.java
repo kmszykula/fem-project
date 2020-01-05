@@ -7,11 +7,11 @@ public class Grid {
     private Element[] elements;
 
 
-    private boolean isBoundaryCondition(double x, double y) {
+    private int isBoundaryCondition(double x, double y) {
         if (x == 0 || y == 0 || x == globalData.getWidth() || y == globalData.getHeight()) {
-            return true;
+            return 1;
         } else {
-            return false;
+            return 0;
         }
     }
 
@@ -32,7 +32,7 @@ public class Grid {
             for (int j = 0; j < globalData.getNodeHeight(); j++) {
                 double x = i * deltaX;
                 double y = j * deltaY;
-                boolean BC = isBoundaryCondition(x, y);
+                int BC = isBoundaryCondition(x, y);
                 nodes[nodeIndex] = new Node(nodeIndex, x, y, 0, BC);
                 nodeIndex++;
             }

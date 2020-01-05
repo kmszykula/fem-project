@@ -6,7 +6,7 @@ public class Node {
     private double x;
     private double y;
     private double temperature;
-    private boolean boundaryCondition;
+    private int boundaryCondition;
 
     public int getNodeIndex() {
         return nodeIndex;
@@ -40,15 +40,15 @@ public class Node {
         this.temperature = temperature;
     }
 
-    public boolean isBoundaryCondition() {
+    public int isBoundaryCondition() {
         return boundaryCondition;
     }
 
-    public void setBoundaryCondition(boolean boundaryCondition) {
+    public void setBoundaryCondition(int boundaryCondition) {
         this.boundaryCondition = boundaryCondition;
     }
 
-    public Node(int nodeIndex, double x, double y, double temperature, boolean boundaryCondition) {
+    public Node(int nodeIndex, double x, double y, double temperature, int boundaryCondition) {
         this.nodeIndex = nodeIndex;
         this.x = x;
         this.y = y;
