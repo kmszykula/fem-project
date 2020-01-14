@@ -20,8 +20,8 @@ public class GlobalData {
         Scanner scanner = new Scanner(file);
         this.height = Double.parseDouble(scanner.nextLine());
         this.width = Double.parseDouble(scanner.nextLine());
-        this.nodeHeight =  Integer.parseInt(scanner.nextLine());
-        this.nodeWidth = Integer.parseInt(scanner.nextLine());
+        this.nodeHeight =  Integer.parseInt(scanner.nextLine()); //ilosc wezlow na wysokosc
+        this.nodeWidth = Integer.parseInt(scanner.nextLine()); //ilosc wezlow na szerokosc
         this.numberOfElements = (nodeHeight - 1) * (nodeWidth - 1);
         this.numberOfNodes = nodeHeight * nodeWidth;
     }

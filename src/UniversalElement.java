@@ -1,9 +1,7 @@
 import lombok.Getter;
 
 @Getter
-public class UniversalElement { //element w układzie (xi, eta)
-
-   // private double[] integrationPoints = new double[]{-(1 / Math.sqrt(3)), 1 / Math.sqrt(3)}; //xi,eta
+public class UniversalElement {
     private int[] integrationPointsWeights;
     private double[] shapeFunctions;
     private double[] xiDerivatives;

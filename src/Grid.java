@@ -22,10 +22,9 @@ public class Grid {
     }
 
     public Node[] nodeBuilder() {
-//        double deltaX = (double) globalData.getWidth() / (double) (globalData.getNodeWidth() - 1); //lengths of elements
-//        double deltaY = (double) globalData.getHeight() / (double) (globalData.getNodeHeight() - 1);
-        double deltaX=0.025;
-       double deltaY=0.025;
+        double deltaX = (double) globalData.getWidth() / (double) (globalData.getNodeWidth() - 1); //lengths of elements
+        double deltaY = (double) globalData.getHeight() / (double) (globalData.getNodeHeight() - 1);
+
 
         int nodeIndex = 1;
         for (int i = 0; i < globalData.getNodeWidth(); i++) {
@@ -56,15 +55,15 @@ public class Grid {
             );
             index++;
             if (index % globalData.getNodeHeight() == 0) {
-                index++; //nie przeskakuje :/
+                index++;
             }
         }
-        for (Element e : elements) {
-            System.out.println("element No: " + e.getElementIndex()); //npe
-            for (int i = 0; i < e.getElementNodes().length; i++) {
-                System.out.println("Has nodes: Node id: " + e.getElementNodes()[i].getNodeIndex() + " coordinates: X: " + e.getElementNodes()[i].getX() + " Y: " + e.getElementNodes()[i].getY());
-            }
-        }
+//        for (Element e : elements) {
+//            System.out.println("element No: " + e.getElementIndex()); //npe
+//            for (int i = 0; i < e.getElementNodes().length; i++) {
+//                System.out.println("Has nodes: Node id: " + e.getElementNodes()[i].getNodeIndex() + " coordinates: X: " + e.getElementNodes()[i].getX() + " Y: " + e.getElementNodes()[i].getY()+" Boundary condition: "+e.getElementNodes()[i].isBoundaryCondition());
+//            }
+//        }
         return elements;
 
     }
@@ -72,15 +71,6 @@ public class Grid {
     public void gridBuilder() {
         nodeBuilder();
         elementBuilder();
-    }
-
-    public Node findNodeAt(double x, double y) {
-        for (Node n : nodes) {
-            if (n.getX() == x && n.getY() == y) {
-                return n;
-            }
-        }
-        return null;
     }
 
     public GlobalData getGlobalData() {
