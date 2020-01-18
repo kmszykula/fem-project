@@ -11,7 +11,7 @@ public class MatrixCalculations {
     int c = GlobalData.getSpecificHeat();
     int ambientTemperature = GlobalData.getAmbientTemperature();
     private int[] integrationPointsWeights = new int[]{1, 1};
-
+    private int shapeFunctionsNumber = 4;
     private UniversalElement integrationPoint1 = new UniversalElement(-xi, -eta, integrationPointsWeights);
     private UniversalElement integrationPoint2 = new UniversalElement(xi, -eta, integrationPointsWeights);
     private UniversalElement integrationPoint3 = new UniversalElement(xi, eta, integrationPointsWeights);
@@ -32,17 +32,17 @@ public class MatrixCalculations {
     private double[] dydxi = new double[integrationPoints2D.length];
     private double[] dydeta = new double[integrationPoints2D.length];
     private double[] jacobianDeterminant = new double[integrationPoints2D.length];
-    private double[][] shapeFunctionsMatrix = new double[integrationPoints2D.length][integrationPoints2D.length];
-    private double[][] dndx = new double[integrationPoints2D.length][integrationPoints2D.length];
-    private double[][] dndy = new double[integrationPoints2D.length][integrationPoints2D.length];
-    private double[][] localHMatrix = new double[4][4];
-    private double[][] localHBCMatrix = new double[4][4];
-    private double[] localPVector = new double[4];
-    private double[][] localCMatrix = new double[4][4]; //todo ujednolicic z h
+    private double[][] shapeFunctionsMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
+    private double[][] dndx = new double[shapeFunctionsNumber][integrationPoints2D.length];
+    private double[][] dndy = new double[shapeFunctionsNumber][integrationPoints2D.length];
+    private double[][] localHMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
+    private double[][] localHBCMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
+    private double[] localPVector = new double[shapeFunctionsNumber];
+    private double[][] localCMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
 
 
-    public double[][] shapeFunctionsMatrix() {
-        //double[][] shapeFunctionsMatrix = new double[4][4];
+    public void shapeFunctionsMatrix() {
+
 
         for (int i = 0; i < integrationPoints2D.length; i++) {
             shapeFunctionsMatrix[i] = new double[]{
@@ -54,7 +54,6 @@ public class MatrixCalculations {
             };
 
         }
-        return shapeFunctionsMatrix;
 
     }
 
@@ -94,7 +93,7 @@ public class MatrixCalculations {
 
     }
 
-    public double[] jacobianDeterminant(Element element) {
+    public void jacobianDeterminant(Element element) {
 
         for (int i = 0; i < xiDerivativesMatrix().length; i++) {
             for (int j = 0; j < xiDerivativesMatrix()[i].length; j++) {
@@ -120,10 +119,9 @@ public class MatrixCalculations {
 //            System.out.println("jakobian " + (i + 1) + " pc: " + jacobianDeterminant[i]);
 //        }
 
-        return jacobianDeterminant;
     }
 
-    public double[][] dNdX(Element element) { //zwraca dn1dx dn2dx itd we wszystkich pc
+    public void dNdX(Element element) { //zwraca dn1dx dn2dx itd we wszystkich pc
 
         for (int i = 0; i < dndx.length; i++) {
             for (int j = 0; j < dndx[i].length; j++) {
@@ -133,17 +131,15 @@ public class MatrixCalculations {
 
         }
 
-        return dndx;
     }
 
-    public double[][] dNdy(Element element) {
+    public void dNdy(Element element) {
 
         for (int i = 0; i < dndy.length; i++) {
             for (int j = 0; j < dndy[i].length; j++) {
                 dndy[i][j] = (1 / jacobianDeterminant[j]) * ((dxdxi[j] * etaDerivativesMatrix()[i][j]) - dxdeta[j] * xiDerivativesMatrix()[i][j]);
             }
         }
-        return dndy;
     }
 
     public double[][] transposeMatrix(double[][] matrix) {
@@ -159,10 +155,10 @@ public class MatrixCalculations {
 
     public double[][] calculateLocalHMatrix(Element element) { //lokalna macierz H (suma we wszystkich 4 pc)
 
-        double[][][] dndxMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
-        double[][][] dndyMultipliedByTransposed = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
+        double[][][] dndxMultipliedByTransposed = new double[integrationPoints2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] dndyMultipliedByTransposed = new double[integrationPoints2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
 
-        double[][][] result = new double[integrationPoints2D.length][integrationPoints2D.length][integrationPoints2D.length];
+        double[][][] result = new double[integrationPoints2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
         double[][] transposedMatrix = transposeMatrix(dndy);
         double[][] transposedMatrix1 = transposeMatrix(dndx);
         for (int i = 0; i < dndxMultipliedByTransposed.length; i++) {
@@ -199,7 +195,7 @@ public class MatrixCalculations {
                 }
             }
         }
-        //double localHMatrix[][] = new double[result.length][result.length]; //co
+
         for (int i = 0; i < localHMatrix.length; i++) {
             for (int j = 0; j < localHMatrix[i].length; j++) {
                 localHMatrix[i][j] = (result[0][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
@@ -244,13 +240,13 @@ public class MatrixCalculations {
     public double[][] matrixHWithBC(Element element) {
 
 
-        double[][][] HBCforAllSurfaces = new double[4][4][4]; //4 macierze h 4x4, po jednej na kazda powierzchnie (zsumowane te w 2pc)
+        double[][][] HBCforAllSurfaces = new double[4][shapeFunctionsNumber][shapeFunctionsNumber]; //4 macierze h 4x4, po jednej na kazda powierzchnie (zsumowane te w 2pc)
         // double[][] localHBCMatrix = new double[integrationPoints2D.length][integrationPoints2D.length];//todo fix
 
-        double[][][] surface1 = new double[2][4][4];
-        double[][][] surface2 = new double[2][4][4];
-        double[][][] surface3 = new double[2][4][4];
-        double[][][] surface4 = new double[2][4][4];
+        double[][][] surface1 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] surface2 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] surface3 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] surface4 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber];
 
 
         for (int i = 0; i < surface1.length; i++) {
@@ -309,12 +305,12 @@ public class MatrixCalculations {
     }
 
     public double[] PVector(Element element) {
-        //double []localPVector=new double[4];
-        double[][] PVectorForAllSurfaces = new double[4][4]; //4 wektory 1x4, po jednym na każdą powierzchnię
-        double[][] surface1 = new double[2][4];//wektor dla 1 powierzchni w 2 punktach calkowania
-        double[][] surface2 = new double[2][4];
-        double[][] surface3 = new double[2][4];
-        double[][] surface4 = new double[2][4];
+
+        double[][] PVectorForAllSurfaces = new double[4][shapeFunctionsNumber]; //4 wektory 1x4, po jednym na każdą powierzchnię
+        double[][] surface1 = new double[2][shapeFunctionsNumber];//wektor dla 1 powierzchni w 2 punktach calkowania
+        double[][] surface2 = new double[2][shapeFunctionsNumber];
+        double[][] surface3 = new double[2][shapeFunctionsNumber];
+        double[][] surface4 = new double[2][shapeFunctionsNumber];
         for (int i = 0; i < surface1.length; i++) {
             for (int j = 0; j < surface1[i].length; j++) {
                 surface1[0][j] = -alfa * surface1IP1.getShapeFunctions()[j] * ambientTemperature;
@@ -358,21 +354,21 @@ public class MatrixCalculations {
     }
 
     public double[][] globalHMatrix(Element[] elements) throws FileNotFoundException {
-        double[][] globalHMatrix = new double[new GlobalData().getNumberOfNodes()][new GlobalData().getNumberOfNodes()]; //?
+        double[][] globalHMatrix = new double[GlobalData.getNumberOfNodes()][GlobalData.getNumberOfNodes()]; //?
 
         for (int i = 0; i < globalHMatrix.length; i++) {
-            Arrays.fill(globalHMatrix[i], 0); //nwm czy tu
+            Arrays.fill(globalHMatrix[i], 0);
         }
         for (int i = 0; i < elements.length; i++) {
             int[] nodeIDs = new int[4];
-            double[][] localHMatrixForSpecificElement = calculateLocalHMatrix(elements[i]); //?
-            double [][]localHBCMatrixForSpecificElement = matrixHWithBC(elements[i]);
+            double[][] localHMatrixForSpecificElement = calculateLocalHMatrix(elements[i]);
+            double[][] localHBCMatrixForSpecificElement = matrixHWithBC(elements[i]);
             for (int j = 0; j < nodeIDs.length; j++) {
                 nodeIDs[j] = elements[i].getElementNodes()[j].getNodeIndex() - 1;
             }
             for (int z = 0; z < nodeIDs.length; z++) {
                 for (int k = 0; k < nodeIDs.length; k++) {
-                    globalHMatrix[nodeIDs[z]][nodeIDs[k]] += localHMatrixForSpecificElement[z][k]+localHBCMatrixForSpecificElement[z][k]; //czy to zadziala jak h jest globalne xddd ja tego nie widze
+                    globalHMatrix[nodeIDs[z]][nodeIDs[k]] += localHMatrixForSpecificElement[z][k] + localHBCMatrixForSpecificElement[z][k]; //czy to zadziala jak h jest globalne xddd ja tego nie widze
                 }
             }
 
@@ -384,7 +380,7 @@ public class MatrixCalculations {
     }
 
     public double[][] globalCMatrix(Element[] elements) throws FileNotFoundException {
-        double[][] globalCMatrix = new double[new GlobalData().getNumberOfNodes()][new GlobalData().getNumberOfNodes()]; //?
+        double[][] globalCMatrix = new double[GlobalData.getNumberOfNodes()][GlobalData.getNumberOfNodes()]; //?
         for (int i = 0; i < globalCMatrix.length; i++) {
             Arrays.fill(globalCMatrix[i], 0);
         }
@@ -397,7 +393,7 @@ public class MatrixCalculations {
             for (int z = 0; z < nodeIDs.length; z++) {
                 for (int k = 0; k < nodeIDs.length; k++) {
 
-                    globalCMatrix[nodeIDs[z]][nodeIDs[k]] += localCMatrixForSpecificElement[z][k]; //czy to zadziala jak h jest globalne xddd ja tego nie widze
+                    globalCMatrix[nodeIDs[z]][nodeIDs[k]] += localCMatrixForSpecificElement[z][k];
                 }
             }
 
@@ -411,8 +407,8 @@ public class MatrixCalculations {
     }
 
     public double[] globalPVector(Element[] elements) throws FileNotFoundException {
-        double[] globalPVector = new double[new GlobalData().getNumberOfNodes()];
-        Arrays.fill(globalPVector,0);
+        double[] globalPVector = new double[GlobalData.getNumberOfNodes()];
+        Arrays.fill(globalPVector, 0);
         for (int i = 0; i < elements.length; i++) {
             int[] nodeIDs = new int[4];
             double[] localPVectorForSpecificElement = PVector(elements[i]);

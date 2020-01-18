@@ -19,7 +19,7 @@ public class Simulation {
         int initialTemperature = GlobalData.getInitialTemperature();
 
         int iterationsNumber = (int) simulationTime / (int) simulationTimeStep;
-        double[] t0 = new double[new GlobalData().getNumberOfNodes()];
+        double[] t0 = new double[GlobalData.getNumberOfNodes()];
         Arrays.fill(t0, initialTemperature);
         Element[] elements = grid.elementBuilder();
 

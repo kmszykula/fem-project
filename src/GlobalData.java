@@ -82,7 +82,7 @@ public class GlobalData {
         GlobalData.numberOfElements = numberOfElements;
     }
 
-    public int getNumberOfNodes() {
+    public static int getNumberOfNodes() {
         return numberOfNodes;
     }
 
