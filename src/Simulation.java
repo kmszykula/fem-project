@@ -9,21 +9,20 @@ public class Simulation {
 
 
     public Simulation() {
-        //albo tu wczytac z pliku
-
 
     }
 
     public void heatTransferSimulation(Grid grid, MatrixCalculations matrixCalculations) throws FileNotFoundException { //todo tak przerobic zeby tu wczytywac wszystkie parametry z pliku?
-        grid.gridBuilder();
-        double simulationTime = 500;
-        double simulationTimeStep = 50;
-        int initialTemperature = 100;
-        //todo rozwiazac rownanie [h]*{t1}={p}, do nodes Temperature zapisujemy min i max wektora t1 w kazdej iteracji
+        //grid.gridBuilder();
+        double simulationTime = GlobalData.getSimulationTime();
+        double simulationTimeStep = GlobalData.getSimulationStepTime();
+        int initialTemperature = GlobalData.getInitialTemperature();
+
         int iterationsNumber = (int) simulationTime / (int) simulationTimeStep;
         double[] t0 = new double[new GlobalData().getNumberOfNodes()];
         Arrays.fill(t0, initialTemperature);
         Element[] elements = grid.elementBuilder();
+
         matrixCalculations.xiDerivativesMatrix();
         matrixCalculations.shapeFunctionsMatrix();
         matrixCalculations.etaDerivativesMatrix();
@@ -43,15 +42,13 @@ public class Simulation {
                     globalP[k] = globalP[k] + (globalC[j][k] / simulationTimeStep * t0[j]);
                 }
             }
-            //todo Vector - vektor p, Matrix - h +c, h+c.solve(p) ??
+      
             Basic2DMatrix HMatrix = new Basic2DMatrix(globalH); //h+c
             BasicVector PVector = new BasicVector(globalP);
             GaussianSolver equationSolver = new GaussianSolver(HMatrix);
             BasicVector t1 = (BasicVector) equationSolver.solve(PVector);
             t0 = t1.toArray();
             double []tmp=t1.toArray();
-
-
             System.out.println("h+c, iteration number: " + i);
             System.out.println(HMatrix);
             System.out.println("p+c, iteration number: " + i);

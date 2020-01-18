@@ -5,11 +5,11 @@ public class MatrixCalculations {
 
     private double xi = 1 / Math.sqrt(3);
     private double eta = 1 / Math.sqrt(3);
-    int conductivity = 25;
-    int alfa = 300;
-    int ro = 7800;
-    int c = 700;
-    int ambientTemperature = 1200; //todo wywalic te dane do symulacji
+    int conductivity = GlobalData.getConductivity();
+    int alfa = GlobalData.getAlfa();
+    int ro = GlobalData.getDensity();
+    int c = GlobalData.getSpecificHeat();
+    int ambientTemperature = GlobalData.getAmbientTemperature();
     private int[] integrationPointsWeights = new int[]{1, 1};
 
     private UniversalElement integrationPoint1 = new UniversalElement(-xi, -eta, integrationPointsWeights);

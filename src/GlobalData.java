@@ -1,29 +1,45 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class GlobalData {
 
 
-    private double height;
-    private double width;
-    private int nodeHeight;
-    private int nodeWidth;
-    private int numberOfElements;
-    private int numberOfNodes;
-
+    private static double height; //h
+    private static double width; //b
+    private static int nodeHeight; //nh - liczba wezlow na wysokosc
+    private static int nodeWidth; //nb  - liczba wezlow na szerokosc
+    private static int numberOfElements;
+    private static int numberOfNodes;
+    private static int initialTemperature;
+    private static int simulationTime;
+    private static int simulationStepTime;
+    private static int ambientTemperature;
+    private static int specificHeat;
+    private static int conductivity;
+    private static int density;
+    private static int alfa;
 
 
     public GlobalData() throws FileNotFoundException {
-        File file = new File("C:\\Users\\asus\\fem-grid\\src\\mes.txt");
+       File file = new File("C:\\Users\\asus\\fem-grid\\src\\mes.txt");
         Scanner scanner = new Scanner(file);
-        this.height = Double.parseDouble(scanner.nextLine());
-        this.width = Double.parseDouble(scanner.nextLine());
-        this.nodeHeight =  Integer.parseInt(scanner.nextLine()); //ilosc wezlow na wysokosc
-        this.nodeWidth = Integer.parseInt(scanner.nextLine()); //ilosc wezlow na szerokosc
-        this.numberOfElements = (nodeHeight - 1) * (nodeWidth - 1);
-        this.numberOfNodes = nodeHeight * nodeWidth;
+        height = Double.parseDouble(scanner.nextLine());
+        width = Double.parseDouble(scanner.nextLine());
+        nodeHeight = Integer.parseInt(scanner.nextLine()); //ilosc wezlow na wysokosc
+        nodeWidth = Integer.parseInt(scanner.nextLine()); //ilosc wezlow na szerokosc
+        initialTemperature = Integer.parseInt(scanner.nextLine());
+        simulationTime = Integer.parseInt(scanner.nextLine());
+        simulationStepTime = Integer.parseInt(scanner.nextLine());
+        ambientTemperature = Integer.parseInt(scanner.nextLine());
+        specificHeat = Integer.parseInt(scanner.nextLine());
+        conductivity = Integer.parseInt(scanner.nextLine());
+        density = Integer.parseInt(scanner.nextLine());
+        alfa = Integer.parseInt(scanner.nextLine());
+        numberOfElements = (nodeHeight - 1) * (nodeWidth - 1);
+        numberOfNodes = nodeHeight * nodeWidth;
+
     }
 
     public double getHeight() {
@@ -31,7 +47,7 @@ public class GlobalData {
     }
 
     public void setHeight(int height) {
-        this.height = height;
+        GlobalData.height = height;
     }
 
     public double getWidth() {
@@ -39,7 +55,7 @@ public class GlobalData {
     }
 
     public void setWidth(int width) {
-        this.width = width;
+        GlobalData.width = width;
     }
 
     public int getNodeHeight() {
@@ -47,7 +63,7 @@ public class GlobalData {
     }
 
     public void setNodeHeight(int nodeHeight) {
-        this.nodeHeight = nodeHeight;
+        GlobalData.nodeHeight = nodeHeight;
     }
 
     public int getNodeWidth() {
@@ -55,7 +71,7 @@ public class GlobalData {
     }
 
     public void setNodeWidth(int nodeWidth) {
-        this.nodeWidth = nodeWidth;
+        GlobalData.nodeWidth = nodeWidth;
     }
 
     public int getNumberOfElements() {
@@ -63,7 +79,7 @@ public class GlobalData {
     }
 
     public void setNumberOfElements(int numberOfElements) {
-        this.numberOfElements = numberOfElements;
+        GlobalData.numberOfElements = numberOfElements;
     }
 
     public int getNumberOfNodes() {
@@ -71,20 +87,71 @@ public class GlobalData {
     }
 
     public void setNumberOfNodes(int numberOfNodes) {
-        this.numberOfNodes = numberOfNodes;
+        GlobalData.numberOfNodes = numberOfNodes;
+    }
+    public static int getAlfa() {
+        return alfa;
+    }
+
+    public static void setAlfa(int alfa) {
+        GlobalData.alfa = alfa;
     }
 
 
-
-    @Override
-    public String toString() {
-        return "GlobalData{" +
-                "height=" + height +
-                ", width=" + width +
-                ", numberHeight=" + nodeHeight +
-                ", numberWidth=" + nodeWidth +
-                ", numberOfElements=" + numberOfElements +
-                ", numberOfNodes=" + numberOfNodes +
-                '}';
+    public static int getInitialTemperature() {
+        return initialTemperature;
     }
+
+    public static void setInitialTemperature(int initialTemperature) {
+        GlobalData.initialTemperature = initialTemperature;
+    }
+
+    public static int getSimulationTime() {
+        return simulationTime;
+    }
+
+    public static void setSimulationTime(int simulationTime) {
+        GlobalData.simulationTime = simulationTime;
+    }
+
+    public static int getSimulationStepTime() {
+        return simulationStepTime;
+    }
+
+    public static void setSimulationStepTime(int simulationStepTime) {
+        GlobalData.simulationStepTime = simulationStepTime;
+    }
+
+    public static int getAmbientTemperature() {
+        return ambientTemperature;
+    }
+
+    public static void setAmbientTemperature(int ambientTemperature) {
+        GlobalData.ambientTemperature = ambientTemperature;
+    }
+
+    public static int getSpecificHeat() {
+        return specificHeat;
+    }
+
+    public static void setSpecificHeat(int specificHeat) {
+        GlobalData.specificHeat = specificHeat;
+    }
+
+    public static int getConductivity() {
+        return conductivity;
+    }
+
+    public static void setConductivity(int conductivity) {
+        GlobalData.conductivity = conductivity;
+    }
+
+    public static int getDensity() {
+        return density;
+    }
+
+    public static void setDensity(int density) {
+        GlobalData.density = density;
+    }
+
 }

@@ -1,6 +1,8 @@
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class UniversalElement {
     private int[] integrationPointsWeights;
     private double[] shapeFunctions;

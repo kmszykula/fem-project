@@ -61,7 +61,7 @@ public class Grid {
 //        for (Element e : elements) {
 //            System.out.println("element No: " + e.getElementIndex()); //npe
 //            for (int i = 0; i < e.getElementNodes().length; i++) {
-//                System.out.println("Has nodes: Node id: " + e.getElementNodes()[i].getNodeIndex() + " coordinates: X: " + e.getElementNodes()[i].getX() + " Y: " + e.getElementNodes()[i].getY()+" Boundary condition: "+e.getElementNodes()[i].isBoundaryCondition());
+//                System.out.println("Has nodes: Node id: " + e.getElementNodes()[i].getNodeIndex() + " coordinates: X: " + e.getElementNodes()[i].getX() + " Y: " + e.getElementNodes()[i].getY()+" Boundary condition: "+e.getElementNodes()[i].isBoundaryCondition()+" Temperature: "+e.getElementNodes()[i].getTemperature());
 //            }
 //        }
         return elements;
