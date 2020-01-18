@@ -17,7 +17,7 @@ public class Grid {
 
     public Grid() throws FileNotFoundException {
         this.globalData = new GlobalData();
-        this.nodes = new Node[globalData.getNumberOfNodes() + 1];
+        this.nodes = new Node[GlobalData.getNumberOfNodes()];
         this.elements = new Element[globalData.getNumberOfElements()];
     }
 
@@ -32,7 +32,7 @@ public class Grid {
                 double x = i * deltaX;
                 double y = j * deltaY;
                 int BC = isBoundaryCondition(x, y);
-                nodes[nodeIndex] = new Node(nodeIndex, x, y, 0, BC);
+                nodes[nodeIndex-1] = new Node(nodeIndex, x, y, 0, BC);
                 nodeIndex++;
             }
         }
@@ -48,10 +48,10 @@ public class Grid {
             elements[i] = new Element(i + 1);
 
             elements[i].setNodes(
-                    nodes[index],
-                    nodes[index + globalData.getNodeHeight()],
-                    nodes[index + globalData.getNodeHeight() + 1],
-                    nodes[index + 1]
+                    nodes[index-1],
+                    nodes[index -1+ globalData.getNodeHeight()],
+                    nodes[index -1+ globalData.getNodeHeight() + 1],
+                    nodes[index -1+ 1]
             );
             index++;
             if (index % globalData.getNodeHeight() == 0) {

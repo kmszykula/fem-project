@@ -12,20 +12,26 @@ public class Simulation {
 
     }
 
-    public void heatTransferSimulation(Grid grid, MatrixCalculations matrixCalculations) throws FileNotFoundException { //todo tak przerobic zeby tu wczytywac wszystkie parametry z pliku?
-        //grid.gridBuilder();
+    public void heatTransferSimulation(Grid grid, MatrixCalculations matrixCalculations) throws FileNotFoundException {
+
         double simulationTime = GlobalData.getSimulationTime();
         double simulationTimeStep = GlobalData.getSimulationStepTime();
         int initialTemperature = GlobalData.getInitialTemperature();
-
-        int iterationsNumber = (int) simulationTime / (int) simulationTimeStep;
-        double[] t0 = new double[GlobalData.getNumberOfNodes()];
-        Arrays.fill(t0, initialTemperature);
+        grid.gridBuilder();
         Element[] elements = grid.elementBuilder();
+        Node[]nodes=grid.getNodes();
+
+        matrixCalculations.jacobianDeterminant(elements[0]);
+        matrixCalculations.dNdX(elements[0]);
+        matrixCalculations.dNdy(elements[0]);
 
         matrixCalculations.xiDerivativesMatrix();
         matrixCalculations.shapeFunctionsMatrix();
         matrixCalculations.etaDerivativesMatrix();
+
+        int iterationsNumber = (int) simulationTime / (int) simulationTimeStep;
+        double[] t0 = new double[GlobalData.getNumberOfNodes()];
+        Arrays.fill(t0, initialTemperature);
 
         for (int i = 0; i < iterationsNumber; i++) {
 
@@ -49,13 +55,20 @@ public class Simulation {
             BasicVector t1 = (BasicVector) equationSolver.solve(PVector);
             t0 = t1.toArray();
             double []tmp=t1.toArray();
+
+            for (int j = 0; j <tmp.length; j++) {
+                nodes[j].setTemperature(tmp[j]);
+                System.out.println("Node number:" +nodes[j].getNodeIndex()+" - temperature: "+nodes[j].getTemperature());
+            }
+
+
             System.out.println("h+c, iteration number: " + i);
             System.out.println(HMatrix);
             System.out.println("p+c, iteration number: " + i);
             System.out.println(PVector);
             System.out.println("temperatures: ");
+            System.out.println(Arrays.toString(t0));
             Arrays.sort(tmp);
-            System.out.println(Arrays.toString(tmp));
             System.out.println("Temp. min: "+tmp[0]+", temp. max: "+tmp[tmp.length-1]);
 
 

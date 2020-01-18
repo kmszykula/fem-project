@@ -40,6 +40,8 @@ public class GlobalData {
         numberOfElements = (nodeHeight - 1) * (nodeWidth - 1);
         numberOfNodes = nodeHeight * nodeWidth;
 
+
+
     }
 
     public double getHeight() {
