@@ -1,3 +1,5 @@
+
+
 import java.io.FileNotFoundException;
 
 public class Grid {
@@ -51,7 +53,7 @@ public class Grid {
                     nodes[index-1],
                     nodes[index -1+ globalData.getNodeHeight()],
                     nodes[index -1+ globalData.getNodeHeight() + 1],
-                    nodes[index -1+ 1]
+                    nodes[index]
             );
             index++;
             if (index % globalData.getNodeHeight() == 0) {

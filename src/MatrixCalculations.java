@@ -1,15 +1,19 @@
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-
+@Getter
+@Setter
 public class MatrixCalculations {
 
     private double xi = 1 / Math.sqrt(3);
     private double eta = 1 / Math.sqrt(3);
-    int conductivity = GlobalData.getConductivity();
-    int alfa = GlobalData.getAlfa();
-    int ro = GlobalData.getDensity();
-    int c = GlobalData.getSpecificHeat();
-    int ambientTemperature = GlobalData.getAmbientTemperature();
+    private int conductivity = GlobalData.getConductivity();
+    private int alfa = GlobalData.getAlfa();
+    private int ro = GlobalData.getDensity();
+    private int c = GlobalData.getSpecificHeat();
+    private int ambientTemperature = GlobalData.getAmbientTemperature();
     private int[] integrationPointsWeights = new int[]{1, 1};
     private int shapeFunctionsNumber = 4;
     private UniversalElement integrationPoint1 = new UniversalElement(-xi, -eta, integrationPointsWeights);
@@ -26,7 +30,6 @@ public class MatrixCalculations {
     private UniversalElement surface3IP2 = new UniversalElement(surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
     private UniversalElement surface4IP1 = new UniversalElement(surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
     private UniversalElement surface4IP2 = new UniversalElement(surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
-    //todo fix them sizes
     private double[] dxdxi = new double[integrationPoints2D.length];
     private double[] dxdeta = new double[integrationPoints2D.length];
     private double[] dydxi = new double[integrationPoints2D.length];

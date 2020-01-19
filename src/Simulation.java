@@ -58,7 +58,7 @@ public class Simulation {
 
             for (int j = 0; j <tmp.length; j++) {
                 nodes[j].setTemperature(tmp[j]);
-                System.out.println("Node number:" +nodes[j].getNodeIndex()+" - temperature: "+nodes[j].getTemperature());
+                System.out.println("Node number: " +nodes[j].getNodeIndex()+" - temperature: "+nodes[j].getTemperature());
             }
 
 
