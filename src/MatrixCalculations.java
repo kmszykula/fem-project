@@ -16,7 +16,7 @@ public class MatrixCalculations {
     private LocalCoordinatesPoint integrationPoint2 = new LocalCoordinatesPoint(xi, -eta, integrationPointsWeights);
     private LocalCoordinatesPoint integrationPoint3 = new LocalCoordinatesPoint(xi, eta, integrationPointsWeights);
     private LocalCoordinatesPoint integrationPoint4 = new LocalCoordinatesPoint(-xi, eta, integrationPointsWeights);
-    private LocalCoordinatesPoint[] integrationPoints2D = new LocalCoordinatesPoint[]{integrationPoint1, integrationPoint2, integrationPoint3, integrationPoint4}; //tworzymy element uniwersalny
+    private LocalCoordinatesPoint[] universalElement2D = new LocalCoordinatesPoint[]{integrationPoint1, integrationPoint2, integrationPoint3, integrationPoint4}; //tworzymy element uniwersalny
 
   //Punkty całkowania po powierzchni
     private double[] surfaceIntegrationPoints = new double[]{-1 / Math.sqrt(3), -1};
@@ -33,14 +33,14 @@ public class MatrixCalculations {
     private LocalCoordinatesPoint surface4IP1 = new LocalCoordinatesPoint(surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
     private LocalCoordinatesPoint surface4IP2 = new LocalCoordinatesPoint(surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
 
-    private double[] dxdxi = new double[integrationPoints2D.length];
-    private double[] dxdeta = new double[integrationPoints2D.length];
-    private double[] dydxi = new double[integrationPoints2D.length];
-    private double[] dydeta = new double[integrationPoints2D.length];
-    private double[] jacobianDeterminant = new double[integrationPoints2D.length];
+    private double[] dxdxi = new double[universalElement2D.length];
+    private double[] dxdeta = new double[universalElement2D.length];
+    private double[] dydxi = new double[universalElement2D.length];
+    private double[] dydeta = new double[universalElement2D.length];
+    private double[] jacobianDeterminant = new double[universalElement2D.length];
     private double[][] shapeFunctionsMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
-    private double[][] dndx = new double[shapeFunctionsNumber][integrationPoints2D.length];
-    private double[][] dndy = new double[shapeFunctionsNumber][integrationPoints2D.length];
+    private double[][] dndx = new double[shapeFunctionsNumber][universalElement2D.length];
+    private double[][] dndy = new double[shapeFunctionsNumber][universalElement2D.length];
     private double[][] localHMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
     private double[][] localHBCMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
     private double[] localPVector = new double[shapeFunctionsNumber];
@@ -54,13 +54,13 @@ public class MatrixCalculations {
 
     public void shapeFunctionsMatrix() {
 
-        for (int i = 0; i < integrationPoints2D.length; i++) {
+        for (int i = 0; i < universalElement2D.length; i++) {
             shapeFunctionsMatrix[i] = new double[]{
 
-                    integrationPoints2D[i].getShapeFunctions()[0], //n1
-                    integrationPoints2D[i].getShapeFunctions()[1], //n2
-                    integrationPoints2D[i].getShapeFunctions()[2], //n3
-                    integrationPoints2D[i].getShapeFunctions()[3]  //n4
+                    universalElement2D[i].getShapeFunctions()[0], //n1
+                    universalElement2D[i].getShapeFunctions()[1], //n2
+                    universalElement2D[i].getShapeFunctions()[2], //n3
+                    universalElement2D[i].getShapeFunctions()[3]  //n4
             };
 
         }
@@ -70,13 +70,13 @@ public class MatrixCalculations {
     public double[][] xiDerivativesMatrix() {
         double[][] result = new double[4][4];
 
-        for (int i = 0; i < integrationPoints2D.length; i++) {
+        for (int i = 0; i < universalElement2D.length; i++) {
             result[i] = new double[]{
 
-                    integrationPoints2D[i].getXiDerivatives()[0],
-                    integrationPoints2D[i].getXiDerivatives()[1],
-                    integrationPoints2D[i].getXiDerivatives()[2],
-                    integrationPoints2D[i].getXiDerivatives()[3]
+                    universalElement2D[i].getXiDerivatives()[0],
+                    universalElement2D[i].getXiDerivatives()[1],
+                    universalElement2D[i].getXiDerivatives()[2],
+                    universalElement2D[i].getXiDerivatives()[3]
             };
 
         }
@@ -88,13 +88,13 @@ public class MatrixCalculations {
     public double[][] etaDerivativesMatrix() {
         double[][] result = new double[4][4];
 
-        for (int i = 0; i < integrationPoints2D.length; i++) {
+        for (int i = 0; i < universalElement2D.length; i++) {
             result[i] = new double[]{
 
-                    integrationPoints2D[i].getEtaDerivatives()[0],
-                    integrationPoints2D[i].getEtaDerivatives()[1],
-                    integrationPoints2D[i].getEtaDerivatives()[2],
-                    integrationPoints2D[i].getEtaDerivatives()[3]
+                    universalElement2D[i].getEtaDerivatives()[0],
+                    universalElement2D[i].getEtaDerivatives()[1],
+                    universalElement2D[i].getEtaDerivatives()[2],
+                    universalElement2D[i].getEtaDerivatives()[3]
             };
 
         }
@@ -165,10 +165,10 @@ public class MatrixCalculations {
 
     public double[][] calculateLocalHMatrix(Element element) { //lokalna macierz H (suma we wszystkich 4 pc)
 
-        double[][][] dndxMultipliedByTransposed = new double[integrationPoints2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
-        double[][][] dndyMultipliedByTransposed = new double[integrationPoints2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] dndxMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] dndyMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
 
-        double[][][] result = new double[integrationPoints2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
+        double[][][] result = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
         double[][] transposedMatrix = transposeMatrix(dndy);
         double[][] transposedMatrix1 = transposeMatrix(dndx);
         for (int i = 0; i < dndxMultipliedByTransposed.length; i++) {
@@ -220,7 +220,7 @@ public class MatrixCalculations {
     public double[][] calculateLocalCMatrix(Element element) {
 
         double[][] shapeFunctionsTransposed = transposeMatrix(shapeFunctionsMatrix);
-        double[][][] multiplicationResult = new double[integrationPoints2D.length][shapeFunctionsMatrix.length][shapeFunctionsMatrix[0].length];
+        double[][][] multiplicationResult = new double[universalElement2D.length][shapeFunctionsMatrix.length][shapeFunctionsMatrix[0].length];
         //[c] = c*ro*{N}{N}^T
         for (int i = 0; i < multiplicationResult.length; i++) {
             for (int j = 0; j < multiplicationResult[i].length; j++) {
