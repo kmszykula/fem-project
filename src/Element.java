@@ -1,15 +1,9 @@
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 
 
 public class Element {
 
-
     private int elementIndex;
-    @Getter
-    @Setter
     private Node[] elementNodes = new Node[4];
 
     public void setNodes(Node node1, Node node2, Node node3, Node node4){
@@ -32,7 +26,13 @@ public class Element {
         this.elementIndex = elementIndex;
     }
 
+    public Node[] getElementNodes() {
+        return elementNodes;
+    }
 
+    public void setElementNodes(Node[] elementNodes) {
+        this.elementNodes = elementNodes;
+    }
 
     @Override
     public String toString() {

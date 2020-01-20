@@ -45,7 +45,7 @@ public class Simulation {
             for (int j = 0; j < globalH.length; j++) {
                 for (int k = 0; k < globalH[j].length; k++) {
                     globalH[j][k] = globalH[j][k] + globalC[j][k] / simulationTimeStep;
-                    globalP[k] = globalP[k] + (globalC[j][k] / simulationTimeStep * t0[j]);
+                    globalP[k] = globalP[k] + (globalC[j][k] / simulationTimeStep * nodes[j].getTemperature());
                 }
             }
       

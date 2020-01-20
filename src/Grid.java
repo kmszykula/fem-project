@@ -1,5 +1,3 @@
-
-
 import java.io.FileNotFoundException;
 
 public class Grid {
@@ -7,7 +5,6 @@ public class Grid {
     private GlobalData globalData;
     private Node[] nodes;
     private Element[] elements;
-
 
     private int isBoundaryCondition(double x, double y) {
         if (x == 0 || y == 0 || x == globalData.getWidth() || y == globalData.getHeight()) {
@@ -17,16 +14,9 @@ public class Grid {
         }
     }
 
-    public Grid() throws FileNotFoundException {
-        this.globalData = new GlobalData();
-        this.nodes = new Node[GlobalData.getNumberOfNodes()];
-        this.elements = new Element[globalData.getNumberOfElements()];
-    }
-
     public Node[] nodeBuilder() {
-        double deltaX = (double) globalData.getWidth() / (double) (globalData.getNodeWidth() - 1); //lengths of elements
+        double deltaX = (double) globalData.getWidth() / (double) (globalData.getNodeWidth() - 1);
         double deltaY = (double) globalData.getHeight() / (double) (globalData.getNodeHeight() - 1);
-
 
         int nodeIndex = 1;
         for (int i = 0; i < globalData.getNodeWidth(); i++) {
@@ -34,7 +24,7 @@ public class Grid {
                 double x = i * deltaX;
                 double y = j * deltaY;
                 int BC = isBoundaryCondition(x, y);
-                nodes[nodeIndex-1] = new Node(nodeIndex, x, y, 0, BC);
+                nodes[nodeIndex-1] = new Node(nodeIndex, x, y, GlobalData.getInitialTemperature(), BC);
                 nodeIndex++;
             }
         }
@@ -48,7 +38,6 @@ public class Grid {
         for (int i = 0; i < globalData.getNumberOfElements(); i++) {
 
             elements[i] = new Element(i + 1);
-
             elements[i].setNodes(
                     nodes[index-1],
                     nodes[index -1+ globalData.getNodeHeight()],
@@ -60,19 +49,26 @@ public class Grid {
                 index++;
             }
         }
-//        for (Element e : elements) {
+
+        return elements;
+        //        for (Element e : elements) {
 //            System.out.println("element No: " + e.getElementIndex()); //npe
 //            for (int i = 0; i < e.getElementNodes().length; i++) {
 //                System.out.println("Has nodes: Node id: " + e.getElementNodes()[i].getNodeIndex() + " coordinates: X: " + e.getElementNodes()[i].getX() + " Y: " + e.getElementNodes()[i].getY()+" Boundary condition: "+e.getElementNodes()[i].isBoundaryCondition()+" Temperature: "+e.getElementNodes()[i].getTemperature());
 //            }
 //        }
-        return elements;
 
     }
 
     public void gridBuilder() {
         nodeBuilder();
         elementBuilder();
+    }
+
+    public Grid() throws FileNotFoundException {
+        this.globalData = new GlobalData();
+        this.nodes = new Node[GlobalData.getNumberOfNodes()];
+        this.elements = new Element[globalData.getNumberOfElements()];
     }
 
     public GlobalData getGlobalData() {

@@ -9,27 +9,30 @@ public class MatrixCalculations {
 
     private double xi = 1 / Math.sqrt(3);
     private double eta = 1 / Math.sqrt(3);
-    private int conductivity = GlobalData.getConductivity();
-    private int alfa = GlobalData.getAlfa();
-    private int ro = GlobalData.getDensity();
-    private int c = GlobalData.getSpecificHeat();
-    private int ambientTemperature = GlobalData.getAmbientTemperature();
     private int[] integrationPointsWeights = new int[]{1, 1};
     private int shapeFunctionsNumber = 4;
-    private UniversalElement integrationPoint1 = new UniversalElement(-xi, -eta, integrationPointsWeights);
-    private UniversalElement integrationPoint2 = new UniversalElement(xi, -eta, integrationPointsWeights);
-    private UniversalElement integrationPoint3 = new UniversalElement(xi, eta, integrationPointsWeights);
-    private UniversalElement integrationPoint4 = new UniversalElement(-xi, eta, integrationPointsWeights);
-    private UniversalElement[] integrationPoints2D = new UniversalElement[]{integrationPoint1, integrationPoint2, integrationPoint3, integrationPoint4};
-    private double[] surfaceIntegrationPoints = new double[]{-1 / Math.sqrt(3), -1}; //nowe pc po powierzchni
-    private UniversalElement surface1IP1 = new UniversalElement(surfaceIntegrationPoints[0], surfaceIntegrationPoints[1], integrationPointsWeights);
-    private UniversalElement surface1IP2 = new UniversalElement(-surfaceIntegrationPoints[0], surfaceIntegrationPoints[1], integrationPointsWeights);
-    private UniversalElement surface2IP1 = new UniversalElement(-surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
-    private UniversalElement surface2IP2 = new UniversalElement(-surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
-    private UniversalElement surface3IP1 = new UniversalElement(-surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
-    private UniversalElement surface3IP2 = new UniversalElement(surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
-    private UniversalElement surface4IP1 = new UniversalElement(surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
-    private UniversalElement surface4IP2 = new UniversalElement(surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
+
+    private LocalCoordinatesPoint integrationPoint1 = new LocalCoordinatesPoint(-xi, -eta, integrationPointsWeights);
+    private LocalCoordinatesPoint integrationPoint2 = new LocalCoordinatesPoint(xi, -eta, integrationPointsWeights);
+    private LocalCoordinatesPoint integrationPoint3 = new LocalCoordinatesPoint(xi, eta, integrationPointsWeights);
+    private LocalCoordinatesPoint integrationPoint4 = new LocalCoordinatesPoint(-xi, eta, integrationPointsWeights);
+    private LocalCoordinatesPoint[] integrationPoints2D = new LocalCoordinatesPoint[]{integrationPoint1, integrationPoint2, integrationPoint3, integrationPoint4}; //tworzymy element uniwersalny
+
+  //Punkty całkowania po powierzchni
+    private double[] surfaceIntegrationPoints = new double[]{-1 / Math.sqrt(3), -1};
+
+    private LocalCoordinatesPoint surface1IP1 = new LocalCoordinatesPoint(surfaceIntegrationPoints[0], surfaceIntegrationPoints[1], integrationPointsWeights);
+    private LocalCoordinatesPoint surface1IP2 = new LocalCoordinatesPoint(-surfaceIntegrationPoints[0], surfaceIntegrationPoints[1], integrationPointsWeights);
+
+    private LocalCoordinatesPoint surface2IP1 = new LocalCoordinatesPoint(-surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
+    private LocalCoordinatesPoint surface2IP2 = new LocalCoordinatesPoint(-surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
+
+    private LocalCoordinatesPoint surface3IP1 = new LocalCoordinatesPoint(-surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
+    private LocalCoordinatesPoint surface3IP2 = new LocalCoordinatesPoint(surfaceIntegrationPoints[0], -surfaceIntegrationPoints[1], integrationPointsWeights);
+
+    private LocalCoordinatesPoint surface4IP1 = new LocalCoordinatesPoint(surfaceIntegrationPoints[1], -surfaceIntegrationPoints[0], integrationPointsWeights);
+    private LocalCoordinatesPoint surface4IP2 = new LocalCoordinatesPoint(surfaceIntegrationPoints[1], surfaceIntegrationPoints[0], integrationPointsWeights);
+
     private double[] dxdxi = new double[integrationPoints2D.length];
     private double[] dxdeta = new double[integrationPoints2D.length];
     private double[] dydxi = new double[integrationPoints2D.length];
@@ -43,9 +46,13 @@ public class MatrixCalculations {
     private double[] localPVector = new double[shapeFunctionsNumber];
     private double[][] localCMatrix = new double[shapeFunctionsNumber][shapeFunctionsNumber];
 
+    private int conductivity = GlobalData.getConductivity();
+    private int alfa = GlobalData.getAlfa();
+    private int ro = GlobalData.getDensity();
+    private int c = GlobalData.getSpecificHeat();
+    private int ambientTemperature = GlobalData.getAmbientTemperature();
 
     public void shapeFunctionsMatrix() {
-
 
         for (int i = 0; i < integrationPoints2D.length; i++) {
             shapeFunctionsMatrix[i] = new double[]{

@@ -3,7 +3,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UniversalElement {
+public class LocalCoordinatesPoint {
     private int[] integrationPointsWeights;
     private double[] shapeFunctions;
     private double[] xiDerivatives;
@@ -57,11 +57,7 @@ public class UniversalElement {
         return 0.25 * (1 - xi);
     }
 
-
-
-
-
-    public UniversalElement(double xi, double eta, int[] integrationPointsWeights) {
+    public LocalCoordinatesPoint(double xi, double eta, int[] integrationPointsWeights) {
 
         this.integrationPointsWeights = integrationPointsWeights;
         this.shapeFunctions = new double[]{N1(xi, eta), N2(xi, eta), N3(xi, eta), N4(xi, eta)};
