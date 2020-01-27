@@ -170,15 +170,15 @@ public class MatrixCalculations {
         double[][][] dndyMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
 
         double[][][] result = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
-        double[][] transposedMatrix = transposeMatrix(dndy);
-        double[][] transposedMatrix1 = transposeMatrix(dndx);
+        double[][] dndyTransposed = transposeMatrix(dndy);
+        double[][] dndxTransposed = transposeMatrix(dndx);
         for (int i = 0; i < dndxMultipliedByTransposed.length; i++) {
             for (int j = 0; j < dndxMultipliedByTransposed[i].length; j++) {
                 for (int k = 0; k < dndxMultipliedByTransposed[i][j].length; k++) {
-                    dndxMultipliedByTransposed[0][j][k] = dndx[0][k] * transposedMatrix1[j][0];
-                    dndxMultipliedByTransposed[1][j][k] = dndx[1][k] * transposedMatrix1[j][1];
-                    dndxMultipliedByTransposed[2][j][k] = dndx[2][k] * transposedMatrix1[j][2];
-                    dndxMultipliedByTransposed[3][j][k] = dndx[3][k] * transposedMatrix1[j][3];
+                    dndxMultipliedByTransposed[0][j][k] = dndx[0][k] * dndxTransposed[j][0];
+                    dndxMultipliedByTransposed[1][j][k] = dndx[1][k] * dndxTransposed[j][1];
+                    dndxMultipliedByTransposed[2][j][k] = dndx[2][k] * dndxTransposed[j][2];
+                    dndxMultipliedByTransposed[3][j][k] = dndx[3][k] * dndxTransposed[j][3];
 
                 }
             }
@@ -186,10 +186,10 @@ public class MatrixCalculations {
         for (int i = 0; i < dndyMultipliedByTransposed.length; i++) {
             for (int j = 0; j < dndyMultipliedByTransposed[i].length; j++) {
                 for (int k = 0; k < dndyMultipliedByTransposed[i][j].length; k++) {
-                    dndyMultipliedByTransposed[0][j][k] = dndy[0][k] * transposedMatrix[j][0];
-                    dndyMultipliedByTransposed[1][j][k] = dndy[1][k] * transposedMatrix[j][1];
-                    dndyMultipliedByTransposed[2][j][k] = dndy[2][k] * transposedMatrix[j][2];
-                    dndyMultipliedByTransposed[3][j][k] = dndy[3][k] * transposedMatrix[j][3];
+                    dndyMultipliedByTransposed[0][j][k] = dndy[0][k] * dndyTransposed[j][0];
+                    dndyMultipliedByTransposed[1][j][k] = dndy[1][k] * dndyTransposed[j][1];
+                    dndyMultipliedByTransposed[2][j][k] = dndy[2][k] * dndyTransposed[j][2];
+                    dndyMultipliedByTransposed[3][j][k] = dndy[3][k] * dndyTransposed[j][3];
 
                 }
             }
@@ -221,25 +221,25 @@ public class MatrixCalculations {
     public double[][] calculateLocalCMatrix(Element element) {
 
         double[][] shapeFunctionsTransposed = transposeMatrix(shapeFunctionsMatrix);
-        double[][][] multiplicationResult = new double[universalElement2D.length][shapeFunctionsMatrix.length][shapeFunctionsMatrix[0].length];
-        for (int i = 0; i < multiplicationResult.length; i++) {
-            for (int j = 0; j < multiplicationResult[i].length; j++) {
-                for (int l = 0; l < multiplicationResult[i][j].length; l++) {
+        double[][][] NVectorMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsMatrix.length][shapeFunctionsMatrix[0].length];
+        for (int i = 0; i < NVectorMultipliedByTransposed.length; i++) {
+            for (int j = 0; j < NVectorMultipliedByTransposed[i].length; j++) {
+                for (int l = 0; l < NVectorMultipliedByTransposed[i][j].length; l++) {
 
-                    multiplicationResult[0][j][l] = shapeFunctionsMatrix[0][l] * shapeFunctionsTransposed[j][0] * c * ro * jacobianDeterminant[l];
-                    multiplicationResult[1][j][l] = shapeFunctionsMatrix[1][l] * shapeFunctionsTransposed[j][1] * c * ro * jacobianDeterminant[l];
-                    multiplicationResult[2][j][l] = shapeFunctionsMatrix[2][l] * shapeFunctionsTransposed[j][2] * c * ro * jacobianDeterminant[l];
-                    multiplicationResult[3][j][l] = shapeFunctionsMatrix[3][l] * shapeFunctionsTransposed[j][3] * c * ro * jacobianDeterminant[l];
+                    NVectorMultipliedByTransposed[0][j][l] = shapeFunctionsMatrix[0][l] * shapeFunctionsTransposed[j][0] * c * ro * jacobianDeterminant[l];
+                    NVectorMultipliedByTransposed[1][j][l] = shapeFunctionsMatrix[1][l] * shapeFunctionsTransposed[j][1] * c * ro * jacobianDeterminant[l];
+                    NVectorMultipliedByTransposed[2][j][l] = shapeFunctionsMatrix[2][l] * shapeFunctionsTransposed[j][2] * c * ro * jacobianDeterminant[l];
+                    NVectorMultipliedByTransposed[3][j][l] = shapeFunctionsMatrix[3][l] * shapeFunctionsTransposed[j][3] * c * ro * jacobianDeterminant[l];
                 }
             }
         }
         // double [][]localCMatrix=new double [shapeFunctionsMatrix.length][shapeFunctionsMatrix.length];
         for (int i = 0; i < localCMatrix.length; i++) {
             for (int j = 0; j < localCMatrix[i].length; j++) {
-                localCMatrix[i][j] = (multiplicationResult[0][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
-                        (multiplicationResult[1][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
-                        (multiplicationResult[2][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
-                        (multiplicationResult[3][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]);
+                localCMatrix[i][j] = (NVectorMultipliedByTransposed[0][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (NVectorMultipliedByTransposed[1][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (NVectorMultipliedByTransposed[2][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
+                        (NVectorMultipliedByTransposed[3][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]);
             }
         }
 
