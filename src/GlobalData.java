@@ -24,7 +24,8 @@ public class GlobalData {
 
 
     public GlobalData() throws FileNotFoundException {
-       File file = new File("C:\\Users\\asus\\fem-grid\\src\\mes.txt");
+      File file = new File("C:\\Users\\asus\\fem-grid\\src\\mes2.txt");
+      //  File file = new File("C:\\Users\\asus\\fem-grid\\src\\mes.txt");
         Scanner scanner = new Scanner(file);
         height = Double.parseDouble(scanner.nextLine());
         width = Double.parseDouble(scanner.nextLine());

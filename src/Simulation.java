@@ -35,7 +35,7 @@ public class Simulation {
 
         for (int i = 0; i < iterationsNumber; i++) {
 
-            double[][] globalH = matrixCalculations.globalHMatrix(elements); //bc already included
+            double[][] globalH = matrixCalculations.globalHMatrix(elements);
             double[][] globalC = matrixCalculations.globalCMatrix(elements);
             double[] globalP = matrixCalculations.globalPVector(elements);
             for (int j = 0; j < globalP.length; j++) {
@@ -48,7 +48,7 @@ public class Simulation {
                     globalP[k] = globalP[k] + (globalC[j][k] / simulationTimeStep * nodes[j].getTemperature());
                 }
             }
-      
+
             Basic2DMatrix HMatrix = new Basic2DMatrix(globalH); //h+c
             BasicVector PVector = new BasicVector(globalP);
             GaussianSolver equationSolver = new GaussianSolver(HMatrix);
@@ -58,16 +58,16 @@ public class Simulation {
 
             for (int j = 0; j <tmp.length; j++) {
                 nodes[j].setTemperature(tmp[j]);
-                System.out.println("Node number: " +nodes[j].getNodeIndex()+" - temperature: "+nodes[j].getTemperature());
+              //  System.out.println("Node number: " +nodes[j].getNodeIndex()+" - temperature: "+nodes[j].getTemperature());
             }
 
 
-            System.out.println("h+c, iteration number: " + i);
-            System.out.println(HMatrix);
-            System.out.println("p+c, iteration number: " + i);
-            System.out.println(PVector);
-            System.out.println("temperatures: ");
-            System.out.println(Arrays.toString(t0));
+//            System.out.println("H matrix, iteration number: " + (i+1));
+//            System.out.println(HMatrix);
+//            System.out.println("P vector, iteration number: " + (i+1));
+//            System.out.println(PVector);
+//            System.out.println("temperatures: ");
+//            System.out.println(Arrays.toString(t0));
             Arrays.sort(tmp);
             System.out.println("Temp. min: "+tmp[0]+", temp. max: "+tmp[tmp.length-1]);
 

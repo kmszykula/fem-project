@@ -132,11 +132,12 @@ public class MatrixCalculations {
 
     }
 
-    public void dNdX(Element element) { //zwraca dn1dx dn2dx itd we wszystkich pc
+    public void dNdX(Element element) {
 
         for (int i = 0; i < dndx.length; i++) {
             for (int j = 0; j < dndx[i].length; j++) {
-                dndx[i][j] = (1 / jacobianDeterminant[j]) * ((dydeta[j] * xiDerivativesMatrix()[i][j]) - (dydxi[j] * etaDerivativesMatrix()[i][j]));
+                dndx[i][j] = (1 / jacobianDeterminant[j]) *
+                        ((dydeta[j] * xiDerivativesMatrix()[i][j]) - (dydxi[j] * etaDerivativesMatrix()[i][j]));
 
             }
 
@@ -148,7 +149,8 @@ public class MatrixCalculations {
 
         for (int i = 0; i < dndy.length; i++) {
             for (int j = 0; j < dndy[i].length; j++) {
-                dndy[i][j] = (1 / jacobianDeterminant[j]) * ((dxdxi[j] * etaDerivativesMatrix()[i][j]) - dxdeta[j] * xiDerivativesMatrix()[i][j]);
+                dndy[i][j] = (1 / jacobianDeterminant[j]) *
+                        ((dxdxi[j] * etaDerivativesMatrix()[i][j]) - dxdeta[j] * xiDerivativesMatrix()[i][j]);
             }
         }
     }
@@ -164,11 +166,10 @@ public class MatrixCalculations {
     }
 
 
-    public double[][] calculateLocalHMatrix(Element element) { //lokalna macierz H (suma we wszystkich 4 pc)
+    public double[][] calculateLocalHMatrix(Element element) {
 
         double[][][] dndxMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
         double[][][] dndyMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
-
         double[][][] result = new double[universalElement2D.length][shapeFunctionsNumber][shapeFunctionsNumber];
         double[][] dndyTransposed = transposeMatrix(dndy);
         double[][] dndxTransposed = transposeMatrix(dndx);
@@ -179,7 +180,6 @@ public class MatrixCalculations {
                     dndxMultipliedByTransposed[1][j][k] = dndx[1][k] * dndxTransposed[j][1];
                     dndxMultipliedByTransposed[2][j][k] = dndx[2][k] * dndxTransposed[j][2];
                     dndxMultipliedByTransposed[3][j][k] = dndx[3][k] * dndxTransposed[j][3];
-
                 }
             }
         }
@@ -190,15 +190,12 @@ public class MatrixCalculations {
                     dndyMultipliedByTransposed[1][j][k] = dndy[1][k] * dndyTransposed[j][1];
                     dndyMultipliedByTransposed[2][j][k] = dndy[2][k] * dndyTransposed[j][2];
                     dndyMultipliedByTransposed[3][j][k] = dndy[3][k] * dndyTransposed[j][3];
-
                 }
             }
         }
-
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result[i].length; j++) {
                 for (int l = 0; l < result[i][j].length; l++) {
-
                     result[0][j][l] = (dndxMultipliedByTransposed[0][j][l] + dndyMultipliedByTransposed[0][j][l]) * conductivity * jacobianDeterminant[l];
                     result[1][j][l] = (dndxMultipliedByTransposed[1][j][l] + dndyMultipliedByTransposed[1][j][l]) * conductivity * jacobianDeterminant[l];
                     result[2][j][l] = (dndxMultipliedByTransposed[2][j][l] + dndyMultipliedByTransposed[2][j][l]) * conductivity * jacobianDeterminant[l];
@@ -206,7 +203,6 @@ public class MatrixCalculations {
                 }
             }
         }
-
         for (int i = 0; i < localHMatrix.length; i++) {
             for (int j = 0; j < localHMatrix[i].length; j++) {
                 localHMatrix[i][j] = (result[0][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]) +
@@ -219,7 +215,6 @@ public class MatrixCalculations {
     }
 
     public double[][] calculateLocalCMatrix(Element element) {
-
         double[][] shapeFunctionsTransposed = transposeMatrix(shapeFunctionsMatrix);
         double[][][] NVectorMultipliedByTransposed = new double[universalElement2D.length][shapeFunctionsMatrix.length][shapeFunctionsMatrix[0].length];
         for (int i = 0; i < NVectorMultipliedByTransposed.length; i++) {
@@ -242,7 +237,6 @@ public class MatrixCalculations {
                         (NVectorMultipliedByTransposed[3][i][j] * integrationPointsWeights[0] * integrationPointsWeights[1]);
             }
         }
-
         return localCMatrix;
 
     }
@@ -256,22 +250,18 @@ public class MatrixCalculations {
 
     public double[][] matrixHWithBC(Element element) {
 
-
-        double[][][] HBCforAllSurfaces = new double[4][shapeFunctionsNumber][shapeFunctionsNumber]; //4 macierze h 4x4, po jednej na kazda powierzchnie (zsumowane te w 2pc)
-        // double[][] localHBCMatrix = new double[integrationPoints2D.length][integrationPoints2D.length];//todo fix
-
+        double[][][] HBCforAllSurfaces = new double[4][shapeFunctionsNumber][shapeFunctionsNumber];
         double[][][] surface1 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber]; //0,1
         double[][][] surface2 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber]; //1,2
         double[][][] surface3 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber]; //2,3
         double[][][] surface4 = new double[surfaceIntegrationPoints.length][shapeFunctionsNumber][shapeFunctionsNumber]; //3,0
-
-
         for (int i = 0; i < surface1.length; i++) {
             for (int j = 0; j < surface1[i].length; j++) {
                 for (int k = 0; k < surface1[i][j].length; k++) {
                     surface1[0][j][k] = surface1IP1.getShapeFunctions()[j] * surface1IP1.getShapeFunctions()[k] * alfa;
                     surface1[1][j][k] = surface1IP2.getShapeFunctions()[j] * surface1IP2.getShapeFunctions()[k] * alfa;
-                    HBCforAllSurfaces[0][j][k] = (surface1[0][j][k] * integrationPointsWeights[0] * jacobianDeterminant1D(0,1,element)) + (surface1[1][j][k] * integrationPointsWeights[1] *  jacobianDeterminant1D(0,1,element));
+                    HBCforAllSurfaces[0][j][k] = (surface1[0][j][k] * integrationPointsWeights[0] * jacobianDeterminant1D(0, 1, element))
+                            + (surface1[1][j][k] * integrationPointsWeights[1] * jacobianDeterminant1D(0, 1, element));
                 }
             }
         }
@@ -280,7 +270,8 @@ public class MatrixCalculations {
                 for (int k = 0; k < surface2[i][j].length; k++) {
                     surface2[0][j][k] = surface2IP1.getShapeFunctions()[j] * surface2IP1.getShapeFunctions()[k] * alfa;
                     surface2[1][j][k] = surface2IP2.getShapeFunctions()[j] * surface2IP2.getShapeFunctions()[k] * alfa;
-                    HBCforAllSurfaces[1][j][k] = (surface2[0][j][k] * integrationPointsWeights[0] *  jacobianDeterminant1D(1,2,element)) + (surface2[1][j][k] * integrationPointsWeights[1] *  jacobianDeterminant1D(1,2,element));
+                    HBCforAllSurfaces[1][j][k] = (surface2[0][j][k] * integrationPointsWeights[0] * jacobianDeterminant1D(1, 2, element))
+                            + (surface2[1][j][k] * integrationPointsWeights[1] * jacobianDeterminant1D(1, 2, element));
 
                 }
             }
@@ -290,7 +281,8 @@ public class MatrixCalculations {
                 for (int k = 0; k < surface3[i][j].length; k++) {
                     surface3[0][j][k] = surface3IP1.getShapeFunctions()[j] * surface3IP1.getShapeFunctions()[k] * alfa;
                     surface3[1][j][k] = surface3IP2.getShapeFunctions()[j] * surface3IP2.getShapeFunctions()[k] * alfa;
-                    HBCforAllSurfaces[2][j][k] = (surface3[0][j][k] * integrationPointsWeights[0] *  jacobianDeterminant1D(2,3,element)) + (surface3[1][j][k] * integrationPointsWeights[1] *  jacobianDeterminant1D(2,3,element));
+                    HBCforAllSurfaces[2][j][k] = (surface3[0][j][k] * integrationPointsWeights[0] * jacobianDeterminant1D(2, 3, element)) +
+                            (surface3[1][j][k] * integrationPointsWeights[1] * jacobianDeterminant1D(2, 3, element));
                 }
             }
         }
@@ -299,7 +291,8 @@ public class MatrixCalculations {
                 for (int k = 0; k < surface4[i][j].length; k++) {
                     surface4[0][j][k] = surface4IP1.getShapeFunctions()[j] * surface4IP1.getShapeFunctions()[k] * alfa;
                     surface4[1][j][k] = surface4IP2.getShapeFunctions()[j] * surface4IP2.getShapeFunctions()[k] * alfa;
-                    HBCforAllSurfaces[3][j][k] = (surface4[0][j][k] * integrationPointsWeights[0] * jacobianDeterminant1D(3,0,element)) + (surface4[1][j][k] * integrationPointsWeights[1] *  jacobianDeterminant1D(3,0,element));
+                    HBCforAllSurfaces[3][j][k] = (surface4[0][j][k] * integrationPointsWeights[0] * jacobianDeterminant1D(3, 0, element)) +
+                            (surface4[1][j][k] * integrationPointsWeights[1] * jacobianDeterminant1D(3, 0, element));
                 }
             }
         }
@@ -332,28 +325,32 @@ public class MatrixCalculations {
             for (int j = 0; j < surface1[i].length; j++) {
                 surface1[0][j] = -alfa * surface1IP1.getShapeFunctions()[j] * ambientTemperature;
                 surface1[1][j] = -alfa * surface1IP2.getShapeFunctions()[j] * ambientTemperature;
-                PVectorForAllSurfaces[0][j] = (surface1[0][j] * integrationPointsWeights[0] *  jacobianDeterminant1D(0,1,element)) + (surface1[1][j] * integrationPointsWeights[1] *  jacobianDeterminant1D(0,1,element));
+                PVectorForAllSurfaces[0][j] = (surface1[0][j] * integrationPointsWeights[0] * jacobianDeterminant1D(0, 1, element)) +
+                        (surface1[1][j] * integrationPointsWeights[1] * jacobianDeterminant1D(0, 1, element));
             }
         }
         for (int i = 0; i < surface2.length; i++) {
             for (int j = 0; j < surface2[i].length; j++) {
                 surface2[0][j] = -alfa * surface2IP1.getShapeFunctions()[j] * ambientTemperature;
                 surface2[1][j] = -alfa * surface2IP2.getShapeFunctions()[j] * ambientTemperature;
-                PVectorForAllSurfaces[1][j] = (surface2[0][j] * integrationPointsWeights[0] *  jacobianDeterminant1D(1,2,element)) + (surface2[1][j] * integrationPointsWeights[1] *  jacobianDeterminant1D(1,2,element));
+                PVectorForAllSurfaces[1][j] = (surface2[0][j] * integrationPointsWeights[0] * jacobianDeterminant1D(1, 2, element)) +
+                        (surface2[1][j] * integrationPointsWeights[1] * jacobianDeterminant1D(1, 2, element));
             }
         }
         for (int i = 0; i < surface3.length; i++) {
             for (int j = 0; j < surface3[i].length; j++) {
                 surface3[0][j] = -alfa * surface3IP1.getShapeFunctions()[j] * ambientTemperature;
                 surface3[1][j] = -alfa * surface3IP2.getShapeFunctions()[j] * ambientTemperature;
-                PVectorForAllSurfaces[2][j] = (surface3[0][j] * integrationPointsWeights[0] * jacobianDeterminant1D(2,3,element)) + (surface3[1][j] * integrationPointsWeights[1] *  jacobianDeterminant1D(2,3,element));
+                PVectorForAllSurfaces[2][j] = (surface3[0][j] * integrationPointsWeights[0] * jacobianDeterminant1D(2, 3, element)) +
+                        (surface3[1][j] * integrationPointsWeights[1] * jacobianDeterminant1D(2, 3, element));
             }
         }
         for (int i = 0; i < surface4.length; i++) {
             for (int j = 0; j < surface4[i].length; j++) {
                 surface4[0][j] = -alfa * surface4IP1.getShapeFunctions()[j] * ambientTemperature;
                 surface4[1][j] = -alfa * surface4IP2.getShapeFunctions()[j] * ambientTemperature;
-                PVectorForAllSurfaces[3][j] = (surface4[0][j] * integrationPointsWeights[0] *  jacobianDeterminant1D(3,0,element)) + (surface4[1][j] * integrationPointsWeights[1] *  jacobianDeterminant1D(3,0,element));
+                PVectorForAllSurfaces[3][j] = (surface4[0][j] * integrationPointsWeights[0] * jacobianDeterminant1D(3, 0, element)) +
+                        (surface4[1][j] * integrationPointsWeights[1] * jacobianDeterminant1D(3, 0, element));
             }
         }
         for (int i = 0; i < localPVector.length; i++) {
@@ -362,16 +359,16 @@ public class MatrixCalculations {
                     (PVectorForAllSurfaces[2][i] * element.getElementNodes()[2].isBoundaryCondition() * element.getElementNodes()[3].isBoundaryCondition()) +
                     (PVectorForAllSurfaces[3][i] * element.getElementNodes()[3].isBoundaryCondition() * element.getElementNodes()[0].isBoundaryCondition());
 
-        }
+        }   return localPVector;
 //        System.out.println("p vector");
 //        System.out.println(Arrays.toString(localPVector));
 
 
-        return localPVector;
+
     }
 
     public double[][] globalHMatrix(Element[] elements) throws FileNotFoundException {
-        double[][] globalHMatrix = new double[GlobalData.getNumberOfNodes()][GlobalData.getNumberOfNodes()]; //?
+        double[][] globalHMatrix = new double[GlobalData.getNumberOfNodes()][GlobalData.getNumberOfNodes()];
 
         for (int i = 0; i < globalHMatrix.length; i++) {
             Arrays.fill(globalHMatrix[i], 0);
@@ -385,7 +382,7 @@ public class MatrixCalculations {
             }
             for (int z = 0; z < nodeIDs.length; z++) {
                 for (int k = 0; k < nodeIDs.length; k++) {
-                    globalHMatrix[nodeIDs[z]][nodeIDs[k]] += localHMatrixForSpecificElement[z][k] + localHBCMatrixForSpecificElement[z][k]; //czy to zadziala jak h jest globalne xddd ja tego nie widze
+                    globalHMatrix[nodeIDs[z]][nodeIDs[k]] += localHMatrixForSpecificElement[z][k] + localHBCMatrixForSpecificElement[z][k];
                 }
             }
 
@@ -397,7 +394,7 @@ public class MatrixCalculations {
     }
 
     public double[][] globalCMatrix(Element[] elements) throws FileNotFoundException {
-        double[][] globalCMatrix = new double[GlobalData.getNumberOfNodes()][GlobalData.getNumberOfNodes()]; //?
+        double[][] globalCMatrix = new double[GlobalData.getNumberOfNodes()][GlobalData.getNumberOfNodes()]; 
         for (int i = 0; i < globalCMatrix.length; i++) {
             Arrays.fill(globalCMatrix[i], 0);
         }
